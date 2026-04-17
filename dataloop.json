@@ -1,0 +1,63 @@
+{
+    "name": "ollama-server",
+    "displayName": "Ollama Server",
+    "version": "1.0.0",
+    "scope": "project",
+    "description": "Local LLM inference via Ollama — OpenAI-compatible /v1 API on port 3000. Includes phi4-mini (chat), qwen2.5:1.5b (chat), and nomic-embed-text (embedding).",
+    "components": {
+        "panels": [
+            {
+                "name": "ollama",
+                "supportedSlots": [
+                ],
+                "conditions": {}
+            }
+        ],
+        "modules": [
+            {
+                "name": "ollama-module",
+                "entryPoint": "runner.py",
+                "className": "Runner",
+                "initInputs": [],
+                "config": {
+                    "isCustomServer": true
+                },
+                "functions": [
+                    {
+                        "name": "dummy",
+                        "output": [],
+                        "input": []
+                    }
+                ]
+            }
+        ],
+        "services": [
+            {
+                "name": "ollama-service",
+                "displayName": "Ollama Server",
+                "moduleName": "ollama-module",
+                "panelNames": ["ollama"],
+                "initParams": {},
+                "runtime": {
+                    "podType": "highmem-m",
+                    "numReplicas": 1,
+                    "concurrency": 10,
+                    "runnerImage": "gcr.io/viewo-g/piper/agent/ollama-server:1.0.0",
+                    "singleAgent": false,
+                    "autoscaler": {
+                        "type": "rabbitmq",
+                        "minReplicas": 1,
+                        "maxReplicas": 1,
+                        "queueLength": 1
+                    },
+                    "preemptible": false
+                },
+                "drainTime": 600,
+                "onReset": "failed",
+                "runExecutionAsProcess": false,
+                "executionTimeout": 3600,
+                "maxAttempts": 3
+            }
+        ]
+    }
+}
