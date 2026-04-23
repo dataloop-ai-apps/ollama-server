@@ -3,6 +3,14 @@
     "displayName": "Ollama Server",
     "version": "1.0.0",
     "scope": "project",
+    "attributes": {
+        "Category": [
+          "Application"
+        ],
+        "Provider": "Ollama",
+        "Application Type": "Model",
+        "License": "Llama 3"
+      },
     "description": "Local LLM inference via Ollama — OpenAI-compatible /v1 API on port 3000. Includes phi4-mini (chat), qwen2.5:1.5b (chat), and nomic-embed-text (embedding).",
     "components": {
         "panels": [
