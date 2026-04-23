@@ -1,7 +1,7 @@
 {
     "name": "ollama-server",
     "displayName": "Ollama Server",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "scope": "public",
     "attributes": {
         "Category": [
