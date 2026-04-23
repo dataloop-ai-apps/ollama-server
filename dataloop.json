@@ -2,7 +2,7 @@
     "name": "ollama-server",
     "displayName": "Ollama Server",
     "version": "1.0.0",
-    "scope": "project",
+    "scope": "public",
     "attributes": {
         "Category": [
           "Application"
