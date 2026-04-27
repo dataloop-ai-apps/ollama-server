@@ -1,55 +1,69 @@
 # Ollama Server — Dataloop App (DPK)
 
-Dataloop App that runs Ollama inside a managed container, serving an **OpenAI-compatible API on port 3000**.
+## What it is
 
-## Pre-loaded Models
+**Ollama Server** is a Dataloop application that gives you **local language models** in your own environment. After you install it, you get a single service that runs **Ollama** and answers requests over a standard **HTTP interface** for chat, embeddings, and listing models. No external vendor account is required for the service itself—models run on the resources provided by the app.
 
-| Model | Type | Parameters | Context Window |
-|-------|------|-----------|----------------|
-| `phi4-mini` | Chat | 3.8B | 16 384 |
-| `qwen2.5:1.5b` | Chat | 1.5B | 32 768 |
-| `nomic-embed-text` | Embedding | 137M | 8 192 |
+Use it when you want **in-house inference** (privacy, cost control, or custom models) while still connecting from Dataloop projects, automations, or other tools you already use.
 
-## API Endpoints (OpenAI-compatible)
+## How to use it
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/v1/chat/completions` | POST | Chat completion (streaming supported) |
-| `/v1/embeddings` | POST | Generate embeddings |
-| `/v1/models` | GET | List available models |
+1. **Build and push** the container image your team uses for this DPK.  
+2. **Publish** the DPK to your Dataloop project and **install** the app.  
+3. **Point clients at the app’s URL** in your environment (or your platform’s recommended way to reach installed apps).  
+4. **Choose a model** by name when you send a request (see the models table below).    
 
-## Build & Push
+To attach a **Dataloop model** to this app, set the model’s **app** to this installed application and set the **model name** to the Ollama model id (for example `phi4-mini`). Your model adapter can then use the app like any other managed inference endpoint in Dataloop.
+
+## When it is ready
+
+The app brings Ollama up and waits until the service responds to health checks before it is considered **ready**. The container is built for **CPU** use; behavior on GPU is not the focus of this DPK as shipped.
+
+## Models
+
+The image is built to include **phi4-mini** out of the box. **Additional models** (see below) are on the roadmap and will be added in a future version of the image by extending the build—no code change in the app runner is required; new names simply appear once the weights are part of the image.
+
+| Name              | Use        | In current image | Notes        |
+|-------------------|------------|------------------|--------------|
+| `phi4-mini`       | Chat       | Yes              | Default for testing |
+| `qwen2.5:1.5b`    | Chat       | Planned          | Future release     |
+| `nomic-embed-text` | Embeddings | Planned        | Future release     |
+
+## What the service exposes (overview)
+
+- **Chat** – send a conversation and get a reply; streaming is supported.  
+- **Embeddings** – available once an embedding model is present in the image.  
+- **List models** – see which model names you can use right now.  
+
+Details follow the same patterns as Ollama’s published HTTP interface (including familiar `/v1/...` paths). Use your platform’s docs or the links from your Dataloop app for the exact base URL in each environment.
+
+## Build and push
 
 ```bash
-# Build the Docker image
 docker build -t gcr.io/viewo-g/piper/agent/ollama-server:1.0.0 .
-
-# Push to registry
 docker push gcr.io/viewo-g/piper/agent/ollama-server:1.0.0
 ```
 
-## Deploy to Dataloop
+Align the image tag with what your `dataloop.json` and pipeline expect.
 
-### Publish the DPK
+## Deploy in Dataloop
+
+**Publish the DPK** from this repository, then **install the app** on a project. Example (adjust project and DPK name to match yours):
 
 ```python
 import dtlpy as dl
 
 project = dl.projects.get(project_name="<your-project>")
 dpk = project.dpks.publish(src_path=".")
-print(f"Published DPK: {dpk.name} v{dpk.version}")
+# After publish, or if the DPK already exists:
+# dpk = project.dpks.get(dpk_name="ollama-server")
+# app = project.apps.install(dpk=dpk)
+# print(app.id)
 ```
 
-### Install the App
+## Optional: register with Jarvis
 
-```python
-project = dl.projects.get(project_name="<your-project>")
-dpk = project.dpks.get(dpk_name="ollama-server")
-app = project.apps.install(dpk=dpk)
-print(f"App installed: {app.id}")
-```
-
-## Register with Jarvis
+If you use **Jarvis** to list and route AI providers, register this app and the models you actually deploy. Replace placeholders (including the provider `type`) with the values your deployment guide specifies.
 
 ```bash
 curl -X POST http://jarvis:6789/api/v1/ai/providers \
@@ -58,7 +72,7 @@ curl -X POST http://jarvis:6789/api/v1/ai/providers \
   -d '{
     "app_id": "<app-id>",
     "route_name": "llm",
-    "type": "openai-compatible",
+    "type": "<provider-type-per-your-docs>",
     "models": [
       {
         "id": "phi4-mini",
@@ -72,64 +86,32 @@ curl -X POST http://jarvis:6789/api/v1/ai/providers \
         },
         "context_window": 16384,
         "max_output_tokens": 4096
-      },
-      {
-        "id": "qwen2.5:1.5b",
-        "display_name": "Qwen 2.5 (1.5B)",
-        "capabilities": {
-          "chat": true,
-          "embeddings": false,
-          "function_calling": false,
-          "vision": false,
-          "streaming": true
-        },
-        "context_window": 32768,
-        "max_output_tokens": 4096
-      },
-      {
-        "id": "nomic-embed-text",
-        "display_name": "Nomic Embed Text",
-        "capabilities": {
-          "chat": false,
-          "embeddings": true,
-          "function_calling": false,
-          "vision": false,
-          "streaming": false
-        },
-        "context_window": 8192,
-        "max_output_tokens": 0
       }
     ]
   }'
 ```
 
-## Verify
+Add more model blocks when you ship `qwen2.5:1.5b`, `nomic-embed-text`, or others. Field names and the allowed `type` value come from your Jarvis or internal runbook.
+
+## Quick test
+
+From a context where **port 3000** reaches the Ollama process (for example a port-forward to the app), you can list models and send a short chat. Replace the host with whatever your runbook says.
 
 ```bash
-# List models
 curl http://localhost:3000/v1/models
+```
 
-# Chat completion
+```bash
 curl http://localhost:3000/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "phi4-mini",
-    "messages": [{"role": "user", "content": "Hello, who are you?"}]
-  }'
-
-# Embedding
-curl http://localhost:3000/v1/embeddings \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "nomic-embed-text",
-    "input": "The quick brown fox jumps over the lazy dog"
+    "messages": [{"role": "user", "content": "Hello!"}]
   }'
 ```
 
-## Adding More Models
+After you add an embedding model, you can test embeddings the same way using that model’s name and the embeddings endpoint for your Ollama version.
 
-1. Add `ollama pull <model>` to the Dockerfile
-2. Rebuild & push the image
-3. Update the Jarvis provider registration with the new model entry
+## Roadmap: more models
 
-No code changes needed — models are declared at registration time.
+The next step for this DPK is to **ship the remaining models** in the container build (Qwen, Nomic, or any others you standardize on), then refresh registration and documentation so teams see the full list. Until then, the published image focuses on **phi4-mini** for chat.
