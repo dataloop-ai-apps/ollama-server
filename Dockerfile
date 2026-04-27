@@ -9,8 +9,8 @@ RUN apt-get update && \
 RUN ollama serve & OLLAMA_PID=$! && \
     sleep 5 && \
     ollama pull phi4-mini && \
-    ollama pull nomic-embed-text && \
-    ollama pull qwen2.5:1.5b && \
+    # ollama pull nomic-embed-text && \
+    # ollama pull qwen2.5:1.5b && \
     kill $OLLAMA_PID || true
 
 COPY runner.py /runner.py
@@ -20,5 +20,5 @@ EXPOSE 3000
 
 
 # Build & push (this is the sole runtime image; app code is deployed via FaaS codebase):
-# docker build --no-cache -t gcr.io/viewo-g/piper/agent/ollama-llm:1.0.0 -f Dockerfile .
-# docker push gcr.io/viewo-g/piper/agent/ollama-llm:1.0.0
+# docker build --no-cache -t gcr.io/viewo-g/piper/agent/ollama-server:1.0.0 -f Dockerfile .
+# docker push gcr.io/viewo-g/piper/agent/ollama-server:1.0.0
