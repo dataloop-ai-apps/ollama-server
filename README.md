@@ -112,6 +112,6 @@ curl http://localhost:3000/v1/chat/completions \
 
 After you add an embedding model, you can test embeddings the same way using that model’s name and the embeddings endpoint for your Ollama version.
 
-## Roadmap: more models
+## Next Step: more models
 
 The next step for this DPK is to **ship the remaining models** in the container build (Qwen, Nomic, or any others you standardize on), then refresh registration and documentation so teams see the full list. Until then, the published image focuses on **phi4-mini** for chat.
