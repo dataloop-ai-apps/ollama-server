@@ -9,8 +9,6 @@ RUN apt-get update && \
 RUN ollama serve & OLLAMA_PID=$! && \
     sleep 5 && \
     ollama pull phi4-mini && \
-    # ollama pull nomic-embed-text && \
-    # ollama pull qwen2.5:1.5b && \
     kill $OLLAMA_PID || true
 
 COPY runner.py /runner.py
