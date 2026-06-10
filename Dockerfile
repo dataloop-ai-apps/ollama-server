@@ -7,7 +7,7 @@ RUN apt-get update && \
 
 # Pre-pull models at build time so the container starts instantly
 RUN ollama serve & OLLAMA_PID=$! && \
-    sleep 5 && \
+    sleep 6 && \
     ollama pull phi4-mini && \
     kill $OLLAMA_PID || true
 
