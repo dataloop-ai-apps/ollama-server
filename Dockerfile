@@ -10,8 +10,8 @@ ENV PATH="/usr/local/bin:${PATH}"
 
 # Pre-pull models at build time so the container starts instantly
 RUN ollama serve & OLLAMA_PID=$! && \
-    sleep 5 && \
-    ollama pull phi4-mini && \
+    sleep 5 && \    
+    ollama pull gpt-oss:20b && \    
     kill $OLLAMA_PID || true
 
 COPY runner.py /runner.py

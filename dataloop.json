@@ -41,16 +41,16 @@
         ],
         "services": [
             {
-                "name": "ollama-service",
-                "displayName": "Ollama Server",
+                "name": "ollama-service-gpt-oss-20b",
+                "displayName": "Ollama Server - GPT OSS 20B",
                 "moduleName": "ollama-module",
                 "panelNames": ["ollama"],
                 "initParams": {},
                 "runtime": {
-                    "podType": "highmem-m",
+                    "podType": "gpu-t4-l",
                     "numReplicas": 1,
                     "concurrency": 10,
-                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.3",                    
+                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.4",                    
                     "singleAgent": false,
                     "autoscaler": {
                         "type": "rabbitmq",
