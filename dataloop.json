@@ -50,7 +50,7 @@
                     "podType": "gpu-t4-l",
                     "numReplicas": 1,
                     "concurrency": 10,
-                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.4",                    
+                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:1.0.4",                    
                     "singleAgent": false,
                     "autoscaler": {
                         "type": "rabbitmq",
