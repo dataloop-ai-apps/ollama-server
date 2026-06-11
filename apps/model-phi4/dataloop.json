@@ -1,6 +1,6 @@
 {
-    "name": "ollama-server",
-    "displayName": "Ollama Server",
+    "name": "ollama-server-phi4",
+    "displayName": "Ollama Server - Phi4",
     "version": "1.0.2",
     "scope": "public",
     "attributes": {
@@ -41,16 +41,16 @@
         ],
         "services": [
             {
-                "name": "ollama-service-gpt-oss-20b",
-                "displayName": "Ollama Server - GPT OSS 20B",
+                "name": "ollama-service-phi4",
+                "displayName": "Ollama Server - Phi4",
                 "moduleName": "ollama-module",
                 "panelNames": ["ollama"],
                 "initParams": {},
                 "runtime": {
-                    "podType": "gpu-t4-m",
+                    "podType": "highmem-m",
                     "numReplicas": 1,
                     "concurrency": 10,
-                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.4",                    
+                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.3",                    
                     "singleAgent": false,
                     "autoscaler": {
                         "type": "rabbitmq",
