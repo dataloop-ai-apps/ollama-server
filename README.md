@@ -6,6 +6,17 @@
 
 Use it when you want **in-house inference** (privacy, cost control, or custom models) while still connecting from Dataloop projects, automations, or other tools you already use.
 
+## Ollama Supported Models
+
+This repository provides separate DPK configurations for different Ollama models:
+
+- **Phi-4 Mini**: A 3.8B parameter chat model running on CPU - see [apps/model_phi4/README.md](apps/model_phi4/README.md) for details
+- **GPT OSS 20B**: A 20B parameter chat model running on GPU - see [apps/model_gpt_oss_20b/README.md](apps/model_gpt_oss_20b/README.md) for details
+
+## Testing
+
+Integration tests are available to verify deployed Ollama services. For information on running tests and configuring test models, see the [testing guide](tests/README.md).
+
 ## How to use it
 
 1. **Build and push** the container image your team uses for this DPK.  
@@ -17,17 +28,16 @@ To attach a **Dataloop model** to this app, set the model’s **app** to this in
 
 ## When it is ready
 
-The app brings Ollama up and waits until the service responds to health checks before it is considered **ready**. The container is built for **CPU** use; behavior on GPU is not the focus of this DPK as shipped.
+The app brings Ollama up and waits until the service responds to health checks before it is considered **ready**. Resource requirements (CPU or GPU) vary by model - see the model-specific README for details.
 
 ## Models
 
-The image is built to include **phi4-mini** out of the box. **Additional models** (see below) are on the roadmap and will be added in a future version of the image by extending the build—no code change in the app runner is required; new names simply appear once the weights are part of the image.
+This repository includes separate DPK configurations for different models. Each model folder contains its own README with model-specific details.
 
-| Name              | Use        | In current image | Notes        |
-|-------------------|------------|------------------|--------------|
-| `phi4-mini`       | Chat       | Yes              | Default for testing |
-| `qwen2.5:1.5b`    | Chat       | Planned          | Future release     |
-| `nomic-embed-text` | Embeddings | Planned        | Future release     |
+| Name              | Use        | Resources | Documentation        |
+|-------------------|------------|-----------|----------------------|
+| `phi4-mini`       | Chat       | CPU       | [apps/model_phi4/README.md](apps/model_phi4/README.md) |
+| `gpt-oss:20b`     | Chat       | GPU       | [apps/model_gpt_oss_20b/README.md](apps/model_gpt_oss_20b/README.md) |
 
 ## What the service exposes (overview)
 
@@ -91,7 +101,7 @@ curl -X POST http://jarvis:6789/api/v1/ai/providers \
   }'
 ```
 
-Add more model blocks when you ship `qwen2.5:1.5b`, `nomic-embed-text`, or others. Field names and the allowed `type` value come from your Jarvis or internal runbook.
+Add more model blocks for additional models as needed. Field names and the allowed `type` value come from your Jarvis or internal runbook.
 
 ## Quick test
 

@@ -1,157 +1,72 @@
-# model-gpt-oss-20b — Ollama DPK
+# GPT OSS 20B — Ollama DPK
 
-**GPT OSS 20B** served via Ollama. A 20-billion-parameter open-source chat model, running on GPU (T4).
+**GPT OSS 20B** is a 20-billion-parameter open-source chat model served via Ollama, running on GPU (T4). This large language model is designed for complex reasoning tasks and advanced natural language understanding.
 
-## Model details
+## Model Overview
+
+GPT OSS 20B is a high-capacity model suitable for:
+- Complex reasoning and problem-solving
+- Code generation and analysis
+- Technical documentation and explanations
+- Advanced conversational AI applications
+- Multi-turn dialogues with context retention
+
+## Model Specifications
 
 | Property | Value |
 |---|---|
-| Ollama model name | `gpt-oss-20b` |
+| Ollama model name | `gpt-oss:20b` |
 | Type | Chat |
 | Parameters | 20 B |
+| Architecture | Transformer-based |
 | Streaming | Yes |
-| Pod type | `gpu-t4` (GPU) |
+| Pod type | `gpu-t4-m` (GPU) |
 | DPK name | `ollama-server-got-oss-20b` |
+| Runner image | `gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.8` |
 
-## Quick test
+## Resource Requirements
 
-```bash
-# List available models
-curl <APPS_URL>/v1/models
+- **GPU**: NVIDIA T4-m with 16GB VRAM minimum
+- **Model size**: ~12-15 GiB in memory
+- **Warmup time**: 5-10 minutes for initial model load
+- **Recommended timeout**: 1800s (30 minutes) for cold-start scenarios
 
-# Chat
-curl <APPS_URL>/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "gpt-oss-20b",
-    "messages": [{"role": "user", "content": "Hello!"}]
-  }'
-```
+The model requires substantial GPU memory and benefits from the increased warmup timeout to ensure full initialization before serving requests.
 
-Replace `<APPS_URL>` with the installed app URL from Dataloop.
+## Performance Characteristics
 
-## Deploy
+- **Latency**: Higher than smaller models due to parameter count
+- **Throughput**: Optimized for batch processing and streaming
+- **Quality**: Superior performance on complex tasks requiring reasoning
+- **Context retention**: Enhanced ability to maintain context over long conversations
 
-```python
-import dtlpy as dl
-project = dl.projects.get(project_name="<your-project>")
-dpk = project.dpks.publish(src_path=".")
-app = project.apps.install(dpk=dpk)
-print(app.id)  # use this as app_id in test_configs.py
-```
+## Deployment Considerations
 
-## What it is
+### Warmup Configuration
+The runner is configured with a 1800s (30-minute) warmup timeout to accommodate the large model size. This ensures the model is fully loaded into GPU memory before accepting requests, preventing timeout errors during cold-start scenarios.
 
-**Ollama Server** is a Dataloop application that gives you **local language models** in your own environment. After you install it, you get a single service that runs **Ollama** and answers requests over a standard **HTTP interface** for chat, embeddings, and listing models. No external vendor account is required for the service itself—models run on the resources provided by the app.
+### Resource Management
+- Ensure sufficient GPU memory is available (16GB+ VRAM recommended)
+- Monitor GPU utilization during inference
+- Consider autoscaling settings based on expected load
+- The model may require longer initialization times compared to smaller models
 
-Use it when you want **in-house inference** (privacy, cost control, or custom models) while still connecting from Dataloop projects, automations, or other tools you already use.
+### Model-Specific Configuration
+The warmup timeout is increased from the default 300s to 1800s in the runner configuration to handle the 20B parameter model's loading requirements.
 
-## How to use it
+## Model Information
 
-1. **Build and push** the container image your team uses for this DPK.  
-2. **Publish** the DPK to your Dataloop project and **install** the app.  
-3. **Point clients at the app’s URL** in your environment (or your platform’s recommended way to reach installed apps).  
-4. **Choose a model** by name when you send a request (see the models table below).    
+GPT OSS 20B is an open-source large language model available through Ollama. It provides a balance between performance and resource requirements, making it suitable for production deployments that need more advanced reasoning capabilities than smaller models can offer.
 
-To attach a **Dataloop model** to this app, set the model’s **app** to this installed application and set the **model name** to the Ollama model id (for example `phi4-mini`). Your model adapter can then use the app like any other managed inference endpoint in Dataloop.
+The model is based on transformer architecture and has been trained on a diverse dataset to handle a wide range of natural language processing tasks. It supports streaming responses for real-time applications and can maintain context across multi-turn conversations.
 
-## When it is ready
+As a 20-billion-parameter model, it sits in the middle range of model sizes - significantly more capable than smaller models (3-7B parameters) while being more resource-efficient than the largest models (70B+ parameters). This makes it suitable for organizations that need advanced capabilities but have constraints on GPU resources.
 
-The app brings Ollama up and waits until the service responds to health checks before it is considered **ready**. The container is built for **CPU** use; behavior on GPU is not the focus of this DPK as shipped.
+## Limitations
 
-## Models
+- Higher resource requirements compared to smaller models
+- Increased latency due to parameter count
+- Higher operational costs (GPU resources)
+- Longer cold-start times
 
-The image is built to include **phi4-mini** out of the box. **Additional models** (see below) are on the roadmap and will be added in a future version of the image by extending the build—no code change in the app runner is required; new names simply appear once the weights are part of the image.
-
-| Name              | Use        | In current image | Notes        |
-|-------------------|------------|------------------|--------------|
-| `phi4-mini`       | Chat       | Yes              | Default for testing |
-| `qwen2.5:1.5b`    | Chat       | Planned          | Future release     |
-| `nomic-embed-text` | Embeddings | Planned        | Future release     |
-
-## What the service exposes (overview)
-
-- **Chat** – send a conversation and get a reply; streaming is supported.  
-- **Embeddings** – available once an embedding model is present in the image.  
-- **List models** – see which model names you can use right now.  
-
-Details follow the same patterns as Ollama’s published HTTP interface (including familiar `/v1/...` paths). Use your platform’s docs or the links from your Dataloop app for the exact base URL in each environment.
-
-## Build and push
-
-```bash
-docker build -t gcr.io/viewo-g/piper/agent/ollama-server:1.0.0 .
-docker push gcr.io/viewo-g/piper/agent/ollama-server:1.0.0
-```
-
-Align the image tag with what your `dataloop.json` and pipeline expect.
-
-## Deploy in Dataloop
-
-**Publish the DPK** from this repository, then **install the app** on a project. Example (adjust project and DPK name to match yours):
-
-```python
-import dtlpy as dl
-
-project = dl.projects.get(project_name="<your-project>")
-dpk = project.dpks.publish(src_path=".")
-# After publish, or if the DPK already exists:
-# dpk = project.dpks.get(dpk_name="ollama-server")
-# app = project.apps.install(dpk=dpk)
-# print(app.id)
-```
-
-## Optional: register with Jarvis
-
-If you use **Jarvis** to list and route AI providers, register this app and the models you actually deploy. Replace placeholders (including the provider `type`) with the values your deployment guide specifies.
-
-```bash
-curl -X POST http://jarvis:6789/api/v1/ai/providers \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "app_id": "<app-id>",
-    "route_name": "llm",
-    "type": "<provider-type-per-your-docs>",
-    "models": [
-      {
-        "id": "phi4-mini",
-        "display_name": "Phi-4 Mini (3.8B)",
-        "capabilities": {
-          "chat": true,
-          "embeddings": false,
-          "function_calling": true,
-          "vision": false,
-          "streaming": true
-        },
-        "context_window": 16384,
-        "max_output_tokens": 4096
-      }
-    ]
-  }'
-```
-
-Add more model blocks when you ship `qwen2.5:1.5b`, `nomic-embed-text`, or others. Field names and the allowed `type` value come from your Jarvis or internal runbook.
-
-## Quick test
-
-From a context where **port 3000** reaches the Ollama process (for example a port-forward to the app), you can list models and send a short chat. Replace the host with whatever your runbook says.
-
-```bash
-curl http://localhost:3000/v1/models
-```
-
-```bash
-curl http://localhost:3000/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "phi4-mini",
-    "messages": [{"role": "user", "content": "Hello!"}]
-  }'
-```
-
-After you add an embedding model, you can test embeddings the same way using that model’s name and the embeddings endpoint for your Ollama version.
-
-## Next Step: more models
-
-The next step for this DPK is to **ship the remaining models** in the container build (Qwen, Nomic, or any others you standardize on), then refresh registration and documentation so teams see the full list. Until then, the published image focuses on **phi4-mini** for chat.
+For general deployment instructions, build/push procedures, and API testing, see the [root README](../../README.md).

@@ -1,60 +1,94 @@
-# Ollama Service — Smoke Tests
+# Tests Documentation
 
-End-to-end smoke tests for the Ollama service deployed on Dataloop.
+This folder contains integration tests for the Ollama Server Dataloop applications.
 
-## Files
+## Test Overview
 
-- **`test_models.py`** — Main test runner. Contains session helpers and all test functions.
-- **`test_configs.py`** — Configuration: environment selection and model registry.
+The tests verify that deployed Ollama services are functioning correctly by:
+- Listing available models via `/v1/models`
+- Sending simple chat requests via `/v1/chat/completions`
+- Testing streaming chat responses
 
----
+## Test Files
 
-## Configuration (`test_configs.py`)
+- `test_configs.py` - Configuration for test models and environments
+- `test_models.py` - Test functions that run against deployed services
 
-Before running the tests, open `test_configs.py` and set the following two things to match your deployment:
+## How to Configure Test Models
 
-**1. Environment** — set `RUN_ENV` to either `PROD` or `RC`:
-
-```python
-RUN_ENV = Environment.PROD  # or Environment.RC
-```
-
-**2. Model registry** — for each model you want to test, add an entry to `TEST_MODELS` with:
-- `app_id` — set to the installed app ID of the Ollama service on Dataloop for each model
+Edit `test_configs.py` to add or modify model configurations:
 
 ```python
 TEST_MODELS = {
-    'phi4-mini':  {'app_id': "<installed_app_id>", 'model_name': "phi4-mini"},
-    'gpt-oss-20b': {'app_id': "<installed_app_id>", 'model_name': "gpt-oss-20b"},
+    'model_key': {
+        'app_id': '<your-app-id>',
+        'model_name': '<ollama-model-name>',
+        'service_name': '<service-name>'
+    }
 }
 ```
 
-> The `app_id` can be found in the Dataloop platform under the installed app for each model service.
+**Parameters:**
+- `app_id`: The Dataloop app ID of the deployed Ollama service
+- `model_name`: The Ollama model name (e.g., `phi4-mini`, `gpt-oss:20b`)
+- `service_name`: The service name used to construct the gate URL
 
----
-
-## Prerequisites
-
-**PROD** — requires a `DTLPY_API_KEY` environment variable (or `.env` file):
-
+To get the `app_id` after deploying:
+```python
+import dtlpy as dl
+project = dl.projects.get(project_name="<your-project>")
+dpk = project.dpks.publish(src_path="apps/<model-folder>")
+app = project.apps.install(dpk=dpk)
+print(app.id)  # Use this as app_id in test_configs.py
 ```
-DTLPY_API_KEY=<your_api_key>
-```
 
-**RC** — requires an active Dataloop RC login token. If expired, a browser login will be triggered automatically on port `7364`.
+## How to Run Tests
 
----
+1. Set up your environment:
+   - For PROD: Set `DTLPY_API_KEY` environment variable
+   - For RC: No setup needed (will prompt for login)
 
-## Running the Tests
+2. Set the environment in `test_configs.py`:
+   ```python
+   RUN_ENV = Environment.PROD  # or Environment.RC
+   ```
 
+3. Run the tests:
+   ```bash
+   python tests/test_models.py
+   ```
+
+## Test Functions
+
+### `test_app_model_request(model_name, app_id)`
+Tests GET `/v1/models` via the Dataloop app request method and asserts the model is listed.
+
+### `test_app_chat_simple(model_name, app_id)`
+Tests POST `/v1/chat/completions` via the Dataloop app request method and asserts a non-empty reply.
+
+### `test_chat_openai_streaming(model_name, app_id, service_name)`
+Tests POST `/v1/chat/completions` with streaming enabled via direct HTTP and asserts a non-empty response. This test follows the redirect flow to get the apps URL and JWT cookie.
+
+## Test Flow
+
+1. Login to Dataloop using the configured environment
+2. Iterate over all models in `TEST_MODELS`
+3. For each model, run all three test functions
+4. Report pass/fail for each test
+
+## Environment Setup
+
+### PROD Environment
+Requires an API key:
 ```bash
-python tests/test_models.py
+export DTLPY_API_KEY=your-api-key
 ```
 
-Tests iterate over every entry in `TEST_MODELS` and run three checks per model:
+### RC Environment
+No setup required - will prompt for interactive login via browser.
 
-| Test | Description |
-|---|---|
-| `test_app_model_request` | `GET /v1/models` via `app.request` — asserts HTTP 200 |
-| `test_app_chat_simple` | `POST /v1/chat/completions` via `app.request` — asserts a non-empty reply |
-| `test_chat_openai_streaming` | `POST /v1/chat/completions` with `stream=True` via direct HTTP — asserts non-empty streamed content |
+## Troubleshooting
+
+- **Socket hang up errors**: May indicate model warmup issues or service timeouts. Check the service logs in the Dataloop console.
+- **401/403 errors**: Check your API key or login credentials.
+- **App not found**: Verify the `app_id` in test_configs.py matches your deployed app.

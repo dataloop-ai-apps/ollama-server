@@ -1,42 +1,72 @@
-# model-phi4 — Ollama DPK
+# Phi-4 Mini — Ollama DPK
 
-Microsoft **Phi-4 Mini** served via Ollama. Lightweight chat model optimised for reasoning and instruction-following, running on CPU.
+**Phi-4 Mini** is a 3.8-billion-parameter open-source chat model served via Ollama, running on CPU. This compact language model is designed for efficient inference while maintaining strong performance on a wide range of natural language tasks.
 
-## Model details
+## Model Overview
+
+Phi-4 Mini is a lightweight model suitable for:
+- General conversational AI applications
+- Question answering and information retrieval
+- Text summarization and comprehension
+- Basic code generation and assistance
+- Multi-language text processing
+
+## Model Specifications
 
 | Property | Value |
 |---|---|
 | Ollama model name | `phi4-mini` |
-| Type | Chat (instruction-tuned) |
+| Type | Chat |
 | Parameters | 3.8 B |
-| Context window | 16 384 tokens |
+| Architecture | Transformer-based |
 | Streaming | Yes |
 | Pod type | `highmem-m` (CPU) |
 | DPK name | `ollama-server-phi4` |
+| Runner image | `gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.7` |
 
-## Quick test
+## Resource Requirements
 
-```bash
-# List available models
-curl <APPS_URL>/v1/models
+- **CPU**: High-memory CPU instance recommended
+- **Model size**: ~2-3 GiB in memory
+- **Warmup time**: 1-2 minutes for initial model load
+- **Recommended timeout**: 300s (5 minutes) for cold-start scenarios
 
-# Chat
-curl <APPS_URL>/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "phi4-mini",
-    "messages": [{"role": "user", "content": "Hello!"}]
-  }'
-```
+The model is optimized for CPU deployment and requires less memory than larger models, making it suitable for environments with limited GPU resources or where cost efficiency is a priority.
 
-Replace `<APPS_URL>` with the installed app URL from Dataloop.
+## Performance Characteristics
 
-## Deploy
+- **Latency**: Lower than larger models due to smaller parameter count
+- **Throughput**: High throughput suitable for real-time applications
+- **Quality**: Good performance on general NLP tasks
+- **Context retention**: Maintains context for moderate-length conversations
 
-```python
-import dtlpy as dl
-project = dl.projects.get(project_name="<your-project>")
-dpk = project.dpks.publish(src_path=".")
-app = project.apps.install(dpk=dpk)
-print(app.id)  # use this as app_id in test_configs.py
-```
+## Deployment Considerations
+
+### Warmup Configuration
+The runner uses the default 300s (5-minute) warmup timeout, which is sufficient for the 3.8B parameter model. The smaller model size allows for faster initialization compared to larger models.
+
+### Resource Management
+- Ensure sufficient CPU memory is available (8GB+ recommended)
+- Monitor CPU utilization during inference
+- Suitable for horizontal scaling due to lower resource requirements
+- Faster cold-start times compared to larger models
+
+### Model-Specific Configuration
+The warmup timeout uses the default 300s setting, which is adequate for the smaller model size and allows for quick deployment cycles.
+
+## Model Information
+
+Phi-4 Mini is an open-source large language model available through Ollama. It provides an excellent balance between performance and resource efficiency, making it ideal for deployments where GPU resources are limited or cost constraints are a concern.
+
+The model is based on transformer architecture and has been trained on a diverse dataset to handle a wide range of natural language processing tasks. It supports streaming responses for real-time applications and can maintain context across multi-turn conversations.
+
+As a 3.8-billion-parameter model, it is significantly more resource-efficient than larger models (20B+ parameters) while still providing strong capabilities for most common NLP tasks. This makes it suitable for organizations that need a balance between performance and operational costs.
+
+## Limitations
+
+- Limited reasoning capabilities compared to larger models
+- May struggle with highly complex technical tasks
+- Smaller context window compared to larger models
+- Lower performance on specialized tasks (e.g., advanced code generation)
+
+For general deployment instructions, build/push procedures, and API testing, see the [root README](../../README.md).
