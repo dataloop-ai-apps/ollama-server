@@ -43,17 +43,17 @@ def create_session(jwt_app):
     return session
 
 
-def setup_session(app_id):
+def setup_session(app_id, service_name):
     """Setup session by following redirect to get apps URL and JWT cookie.
 
     Args:
-        app_id: The app ID used to construct the gate base URL.
+        app_id: The installed app ID used to look up the service name and build the gate URL.
     Returns:
         tuple: (apps_url, jwt_app)
     Raises:
         RuntimeError: If the gate request does not redirect to an apps URL.
     """
-    gate_base = f"https://gate.dataloop.ai/api/v1/apps/ollama-service-{app_id}/panels"
+    gate_base = f"https://gate.dataloop.ai/api/v1/apps/{service_name}-{app_id}/panels"
     session = requests.Session()
     resp = session.get(gate_base + "/v1", headers=dl.client_api.auth)
     if not resp.url or "apps.dataloop.ai" not in resp.url:
@@ -104,7 +104,7 @@ def test_app_chat_simple(model_name, app_id):
     print(f"  Response: {msg}")
     print("PASS\n")
 
-def test_chat_openai_streaming(model_name, app_id):
+def test_chat_openai_streaming(model_name, app_id, service_name):
     """Test POST /v1/chat/completions with streaming via direct HTTP and assert non-empty response.
 
     Args:
@@ -112,7 +112,7 @@ def test_chat_openai_streaming(model_name, app_id):
         app_id: The Dataloop app ID used to resolve the apps URL via setup_session.
     """
     print(f"--- POST /v1/chat/completions (streaming) - {model_name} ---")
-    apps_url, jwt_app = setup_session(app_id)
+    apps_url, jwt_app = setup_session(app_id, service_name)
     session = create_session(jwt_app)
 
     url = apps_url.rstrip("/") + "/chat/completions"
@@ -147,15 +147,16 @@ if __name__ == "__main__":
     login(RUN_ENV)
 
     # Iterate over all models in TEST_MODELS
-    for config_name, model_config in TEST_MODELS.items():
+    for model_config in TEST_MODELS:
         model_name = model_config['model_name']
         app_id = model_config['app_id']
+        service_name = model_config['service_name']
         print(f"\n{'='*60}")
-        print(f"Testing model: {model_name} (config: {config_name})")
+        print(f"Testing model: {model_name} ")
         print(f"{'='*60}\n")
 
         test_app_model_request(model_name, app_id)
         test_app_chat_simple(model_name, app_id)
-        test_chat_openai_streaming(model_name, app_id)
+        test_chat_openai_streaming(model_name, app_id, service_name)
 
     print("All tests passed.")
