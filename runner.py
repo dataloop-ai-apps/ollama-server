@@ -97,13 +97,13 @@ class Runner(dl.BaseServiceRunner):
         except Exception as e:
             logger.warning("Could not fetch model list: %s", e)
 
-    def _warmup_model(self, model_name="gpt-oss:20b", timeout=600):
+    def _warmup_model(self, model_name="phi4-mini", timeout=300):
         """Send a minimal chat request to force Ollama to load the model into memory.
 
-        Without this, the first real request triggers a cold-load of a 12+ GiB model
+        Without this, the first real request triggers a cold-load
         and the Dataloop gateway times out (504) before inference begins.
         """
-        logger.info("Warming up model '%s' (this may take several minutes on CPU) ...", model_name)
+        logger.info("Warming up model '%s' ...", model_name)
         self._log_system_info()
         self._log_loaded_models()
 
