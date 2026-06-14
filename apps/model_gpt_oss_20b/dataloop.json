@@ -24,7 +24,7 @@
         "modules": [
             {
                 "name": "ollama-module",
-                "entryPoint": "apps\\model_gpt_oss_20b\\runner.py",    
+                "entryPoint": "apps/model_gpt_oss_20b/runner.py",    
                 "className": "Runner",
                 "initInputs": [],
                 "config": {
