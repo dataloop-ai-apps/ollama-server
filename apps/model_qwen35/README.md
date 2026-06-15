@@ -15,10 +15,10 @@ Qwen3.5 is a reasoning model suitable for:
 
 | Property | Value |
 |---|---|
-| Ollama model name | `qwen3.5:latest` |
+| Ollama model name | `qwen3.5:9b` |
 | Ollama model page | [https://ollama.com/library/qwen3.5](https://ollama.com/library/qwen3.5) |
 | Type | Chat (Reasoning) |
-| Parameters | ~4-7 B |
+| Parameters | 9 B |
 | Architecture | Transformer-based |
 | Streaming | Yes |
 | Pod type | `gpu-t4-m` (GPU) |
@@ -27,8 +27,8 @@ Qwen3.5 is a reasoning model suitable for:
 ## Resource Requirements
 
 - **GPU**: NVIDIA T4-m with 16GB VRAM minimum
-- **Model size**: ~4-8 GiB in memory
-- **Warmup time**: 2-5 minutes for initial model load
+- **Model size**: ~9-10 GiB in memory
+- **Warmup time**: 5-10 minutes for initial model load
 - **Recommended timeout**: 300-600s for cold-start scenarios
 
 The model requires GPU memory and benefits from warmup to ensure full initialization before serving requests.
@@ -65,7 +65,7 @@ Qwen3.5 is an open-source reasoning model available through Ollama. It provides 
 
 The model is based on transformer architecture and has been trained to handle complex reasoning tasks. It supports streaming responses for real-time applications and can maintain context across multi-turn conversations.
 
-As a reasoning-focused model in the 4-7B parameter range, it offers a good balance between reasoning capabilities and resource efficiency compared to larger models (20B+ parameters).
+As a reasoning-focused model with 9B parameters, it offers enhanced reasoning capabilities while maintaining reasonable resource efficiency compared to larger models (20B+ parameters).
 
 ## Limitations
 
