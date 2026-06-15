@@ -1,4 +1,4 @@
-FROM hub.dataloop.ai/dtlpy-runner-images/cpu:python3.12_opencv
+FROM hub.dataloop.ai/dtlpy-runner-images/gpu:python3.12_cuda11.8_opencv
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends zstd && \
