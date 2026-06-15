@@ -24,7 +24,7 @@
         "modules": [
             {
                 "name": "ollama-module",
-                "entryPoint": "apps/model_quen35/runner.py",    
+                "entryPoint": "runner.py",    
                 "className": "Runner",
                 "initInputs": [],
                 "config": {

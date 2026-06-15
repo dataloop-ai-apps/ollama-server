@@ -16,6 +16,7 @@ Phi-4 Mini is a lightweight model suitable for:
 | Property | Value |
 |---|---|
 | Ollama model name | `phi4-mini` |
+| Ollama model page | [https://ollama.com/library/phi4-mini](https://ollama.com/library/phi4-mini) |
 | Type | Chat |
 | Parameters | 3.8 B |
 | Architecture | Transformer-based |

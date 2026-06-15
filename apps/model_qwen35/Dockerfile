@@ -14,8 +14,6 @@ RUN ollama serve & OLLAMA_PID=$! && \
     ollama pull qwen3.5 && \    
     kill $OLLAMA_PID || true
 
-COPY runner.py /runner.py
-
 ENV OLLAMA_HOST=0.0.0.0:3000
 ENV OLLAMA_KEEP_ALIVE=-1
 EXPOSE 3000

@@ -16,6 +16,7 @@ Qwen3.5 is a reasoning model suitable for:
 | Property | Value |
 |---|---|
 | Ollama model name | `qwen3.5:latest` |
+| Ollama model page | [https://ollama.com/library/qwen3.5](https://ollama.com/library/qwen3.5) |
 | Type | Chat (Reasoning) |
 | Parameters | ~4-7 B |
 | Architecture | Transformer-based |

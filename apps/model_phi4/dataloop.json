@@ -24,7 +24,7 @@
         "modules": [
             {
                 "name": "ollama-module",
-                "entryPoint": "apps/model_phi4/runner.py",
+                "entryPoint": "runner.py",
                 "className": "Runner",
                 "initInputs": [],
                 "config": {
@@ -50,7 +50,7 @@
                     "podType": "highmem-m",
                     "numReplicas": 1,
                     "concurrency": 10,
-                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.7",                    
+                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.13",                    
                     "singleAgent": false,
                     "autoscaler": {
                         "type": "rabbitmq",

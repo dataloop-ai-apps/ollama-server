@@ -1,5 +1,5 @@
 {
-    "name": "ollama-server-got-oss-20b",
+    "name": "ollama-server-gpt-oss-20b",
     "displayName": "Ollama Server - GOT OSS 20B",
     "version": "1.0.2",
     "scope": "public",
@@ -24,7 +24,7 @@
         "modules": [
             {
                 "name": "ollama-module",
-                "entryPoint": "apps/model_gpt_oss_20b/runner.py",    
+                "entryPoint": "runner.py",    
                 "className": "Runner",
                 "initInputs": [],
                 "config": {

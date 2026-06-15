@@ -16,6 +16,7 @@ GPT OSS 20B is a high-capacity model suitable for:
 | Property | Value |
 |---|---|
 | Ollama model name | `gpt-oss:20b` |
+| Ollama model page | [https://ollama.com/library/gpt-oss](https://ollama.com/library/gpt-oss) |
 | Type | Chat |
 | Parameters | 20 B |
 | Architecture | Transformer-based |
