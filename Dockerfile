@@ -1,4 +1,4 @@
-FROM hub.dataloop.ai/dtlpy-runner-images/gpu:python3.12_cuda11.8_opencv
+FROM hub.dataloop.ai/dtlpy-runner-images/cpu:python3.12_opencv
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends zstd && \
@@ -11,10 +11,8 @@ ENV PATH="/usr/local/bin:${PATH}"
 # Pre-pull models at build time so the container starts instantly
 RUN ollama serve & OLLAMA_PID=$! && \
     sleep 5 && \    
-    ollama pull gpt-oss:20b && \    
+    ollama pull phi4-mini && \
     kill $OLLAMA_PID || true
-
-COPY runner.py /runner.py
 
 ENV OLLAMA_HOST=0.0.0.0:3000
 ENV OLLAMA_KEEP_ALIVE=-1
