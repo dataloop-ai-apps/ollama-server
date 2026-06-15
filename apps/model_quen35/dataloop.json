@@ -1,6 +1,6 @@
 {
-    "name": "ollama-server-got-oss-20b",
-    "displayName": "Ollama Server - GOT OSS 20B",
+    "name": "ollama-server-qwen35",
+    "displayName": "Ollama Server - Qwen3.5",
     "version": "1.0.2",
     "scope": "public",
     "attributes": {
@@ -24,7 +24,7 @@
         "modules": [
             {
                 "name": "ollama-module",
-                "entryPoint": "apps/model_gpt_oss_20b/runner.py",    
+                "entryPoint": "apps/model_quen35/runner.py",    
                 "className": "Runner",
                 "initInputs": [],
                 "config": {
@@ -41,8 +41,8 @@
         ],
         "services": [
             {
-                "name": "ollama-service-gpt-oss-20b",
-                "displayName": "Ollama Server - GPT OSS 20B",
+                "name": "ollama-service-qwen35",
+                "displayName": "Ollama Server - Qwen3.5",
                 "moduleName": "ollama-module",
                 "panelNames": ["ollama"],
                 "initParams": {},
@@ -50,7 +50,7 @@
                     "podType": "gpu-t4-m",
                     "numReplicas": 1,
                     "concurrency": 10,
-                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.8",                    
+                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.11",                    
                     "singleAgent": false,
                     "autoscaler": {
                         "type": "rabbitmq",

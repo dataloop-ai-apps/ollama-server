@@ -6,8 +6,8 @@ class Environment(Enum):
 
 
 TEST_MODELS = [
-    {"model_name": "phi4-mini", 'app_id': "6a2e4a09efa04c1a6267a096", "service_name": "ollama-service-phi4"},  # new ollama phi4 app     
-    {"model_name": "gpt-oss:20b", 'app_id': "6a2e407d2954388f96d61c6d",  "service_name": "ollama-service-gpt-oss"},  # new ollama gpt-oss-20b app
+    {"model_name": "phi4-mini", 'app_id': "6a2f7918e1941e405f3d4aa4", "service_name": "ollama-service-phi4"},  # new ollama phi4 app     
+    {"model_name": "qwen3.5:latest", 'app_id': "6a2f97fdb38ee87527a3b3ca",  "service_name": "ollama-service-qwen35"},  # new qwen 3.5   
  ]
 
 RUN_ENV = Environment.PROD
