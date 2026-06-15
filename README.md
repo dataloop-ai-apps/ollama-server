@@ -11,7 +11,7 @@ Use it when you want **in-house inference** (privacy, cost control, or custom mo
 This repository provides separate DPK configurations for different Ollama models:
 
 - **Phi-4 Mini**: A 3.8B parameter chat model running on CPU - see [apps/model_phi4/README.md](apps/model_phi4/README.md) for details
-- **Qwen3.5**: A reasoning-focused chat model running on GPU - see [apps/model_qwen35/README.md](apps/model_qwen35/README.md) for details
+- **Qwen3.5**: A 9B parameter reasoning-focused chat model running on GPU - see [apps/model_qwen35/README.md](apps/model_qwen35/README.md) for details
 
 ## Testing
 
@@ -37,7 +37,7 @@ This repository includes separate DPK configurations for different models. Each 
 | Name              | Use        | Resources | Documentation        |
 |-------------------|------------|-----------|----------------------|
 | `phi4-mini`       | Chat       | CPU       | [apps/model_phi4/README.md](apps/model_phi4/README.md) |
-| `qwen3.5:latest`  | Chat       | GPU       | [apps/model_qwen35/README.md](apps/model_qwen35/README.md) |
+| `qwen3.5:9b`     | Chat       | GPU       | [apps/model_qwen35/README.md](apps/model_qwen35/README.md) |
 
 ## What the service exposes (overview)
 
