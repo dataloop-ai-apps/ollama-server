@@ -1,4 +1,4 @@
-# GPT OSS 20B — Ollama DPK
+# GPT OSS 20B — Ollama Model
 
 **GPT OSS 20B** is a 20-billion-parameter open-source chat model served via Ollama, running on GPU (T4). This large language model is designed for complex reasoning tasks and advanced natural language understanding.
 
@@ -23,7 +23,6 @@ GPT OSS 20B is a high-capacity model suitable for:
 | Streaming | Yes |
 | Pod type | `gpu-t4-m` (GPU) |
 | DPK name | `ollama-server-got-oss-20b` |
-| Runner image | `gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.8` |
 
 ## Resource Requirements
 

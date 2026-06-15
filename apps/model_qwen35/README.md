@@ -1,4 +1,4 @@
-# Qwen3.5 — Ollama DPK
+# Qwen3.5 — Ollama Model
 
 **Qwen3.5** is a reasoning-focused open-source chat model served via Ollama, running on GPU (T4). This model is designed for advanced reasoning tasks with transparent thinking processes.
 
@@ -23,7 +23,6 @@ Qwen3.5 is a reasoning model suitable for:
 | Streaming | Yes |
 | Pod type | `gpu-t4-m` (GPU) |
 | DPK name | `ollama-server-qwen35` |
-| Runner image | `gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.11` |
 
 ## Resource Requirements
 

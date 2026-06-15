@@ -1,4 +1,4 @@
-# Phi-4 Mini — Ollama DPK
+# Phi-4 Mini — Ollama Model
 
 **Phi-4 Mini** is a 3.8-billion-parameter open-source chat model served via Ollama, running on CPU. This compact language model is designed for efficient inference while maintaining strong performance on a wide range of natural language tasks.
 
@@ -23,7 +23,6 @@ Phi-4 Mini is a lightweight model suitable for:
 | Streaming | Yes |
 | Pod type | `highmem-m` (CPU) |
 | DPK name | `ollama-server-phi4` |
-| Runner image | `gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.7` |
 
 ## Resource Requirements
 
