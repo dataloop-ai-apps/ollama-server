@@ -11,9 +11,14 @@ ENV PATH="/usr/local/bin:${PATH}"
 # Pre-pull models at build time so the container starts instantly
 RUN ollama serve & OLLAMA_PID=$! && \
     sleep 5 && \    
-    ollama pull gpt-oss:20b && \     
+    ollama pull qwen3.5:9b && \    
     kill $OLLAMA_PID || true
 
 ENV OLLAMA_HOST=0.0.0.0:3000
 ENV OLLAMA_KEEP_ALIVE=-1
 EXPOSE 3000
+
+
+# Build & push (this is the sole runtime image; app code is deployed via FaaS codebase):
+# docker build --no-cache -t gcr.io/viewo-g/piper/agent/ollama-server:1.0.1 -f Dockerfile .
+# docker push gcr.io/viewo-g/piper/agent/ollama-server:1.0.1
