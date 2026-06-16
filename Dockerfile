@@ -11,7 +11,7 @@ ENV PATH="/usr/local/bin:${PATH}"
 # Pre-pull models at build time so the container starts instantly
 RUN ollama serve & OLLAMA_PID=$! && \
     sleep 5 && \    
-    ollama pull gpt-oss:20b && \     
+    ollama pull qwen3.5:9b && \       
     kill $OLLAMA_PID || true
 
 ENV OLLAMA_HOST=0.0.0.0:3000
