@@ -1,8 +1,8 @@
 {
-    "name": "ollama-server-phi4",
+    "name": "ollama-server-phi4-yigal3",
     "displayName": "Ollama Server - Phi4",
     "version": "1.0.2",
-    "scope": "public",
+    "scope": "project",
     "attributes": {
         "Category": [
           "Application"
@@ -41,8 +41,8 @@
         ],
         "services": [
             {
-                "name": "ollama-service-phi4",
-                "displayName": "Ollama Server - Phi4",
+                "name": "ollama-service-phi4-yigal3",
+                "displayName": "Ollama Server - Phi4 - Yigal3",
                 "moduleName": "ollama-module",
                 "panelNames": ["ollama"],
                 "initParams": {},
