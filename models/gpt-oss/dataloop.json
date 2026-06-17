@@ -1,6 +1,6 @@
 {
-    "name": "ollama-server-phi4",
-    "displayName": "Ollama Server - Phi4",
+    "name": "ollama-server-gpt-oss-20b",
+    "displayName": "Ollama Server - GPT OSS 20B",
     "version": "1.0.2",
     "scope": "project",
     "attributes": {
@@ -24,7 +24,7 @@
         "modules": [
             {
                 "name": "ollama-module",
-                "entryPoint": "runner.py",
+                "entryPoint": "runner.py",    
                 "className": "Runner",
                 "initInputs": [],
                 "config": {
@@ -41,16 +41,16 @@
         ],
         "services": [
             {
-                "name": "ollama-service-phi4",
-                "displayName": "Ollama Server - Phi4",
+                "name": "ollama-service-gpt-oss-20b",
+                "displayName": "Ollama Server - GPT OSS 20B",
                 "moduleName": "ollama-module",
                 "panelNames": ["ollama"],
                 "initParams": {},
                 "runtime": {
-                    "podType": "highmem-m",
+                    "podType": "gpu-t4-m",
                     "numReplicas": 1,
                     "concurrency": 10,
-                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.20",                    
+                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.21",                    
                     "singleAgent": false,
                     "autoscaler": {
                         "type": "rabbitmq",
