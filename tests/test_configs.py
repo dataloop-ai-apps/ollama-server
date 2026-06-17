@@ -4,10 +4,14 @@ class Environment(Enum):
     PROD = "prod"
     RC = "rc"
 
+PROJECT_ID = "afd5a953-b88d-439c-afdf-9486ab3a94c2"
+
 
 TEST_MODELS = [
-    {"model_name": "qwen3.5:9b", 'app_id': "6a2f97fdb38ee87527a3b3ca",  "service_name": "ollama-service-qwen35"},  # new qwen 3.5   
-    {"model_name": "phi4-mini", 'app_id': "6a2f7918e1941e405f3d4aa4", "service_name": "ollama-service-phi4"},  # new ollama phi4 app     
- ]
+    {"model_name": "gpt-oss:20b","dpk_name": "ollama-server-gpt-oss-20b",  "service_name": "ollama-service-gpt-oss-20b"},    
+    {"model_name": "qwen3.5:9b", "dpk_name": "ollama-server-qwen35", "service_name": "ollama-service-qwen35"}, 
+    {"model_name": "phi4-mini","dpk_name": "ollama-server-phi4", "service_name": "ollama-service-phi4"}, 
+]
+
 
 RUN_ENV = Environment.PROD

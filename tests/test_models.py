@@ -14,7 +14,7 @@ import requests
 from dotenv import load_dotenv
 import os
 
-from test_configs import TEST_MODELS, Environment, RUN_ENV
+from test_configs import TEST_MODELS, Environment, RUN_ENV, PROJECT_ID
 
 
 def login(env):
@@ -153,14 +153,23 @@ if __name__ == "__main__":
     # Iterate over all models in TEST_MODELS
     for model_config in TEST_MODELS:
         model_name = model_config['model_name']
-        app_id = model_config['app_id']
         service_name = model_config['service_name']
+        dpk_name = model_config['dpk_name']
+
         print(f"\n{'='*60}")
         print(f"Testing model: {model_name} ")
         print(f"{'='*60}\n")
+        project = dl.projects.get(project_id=PROJECT_ID)
+        dpk = project.dpks.get(dpk_name=dpk_name)
+        try:
+            app = project.apps.get(app_name=dpk.display_name)  # get existing
+        except dl.exceptions.NotFound:
+            print(f"App not found for DPK '{dpk_name}' — skipping.")
+            continue
+
+        app_id = app.id
 
         test_app_model_request(model_name, app_id)
         test_app_chat_simple(model_name, app_id)
-        test_chat_openai_streaming(model_name, app_id, service_name)
-
+        test_chat_openai_streaming(model_name, app_id, service_name)        
     print("All tests passed.")
