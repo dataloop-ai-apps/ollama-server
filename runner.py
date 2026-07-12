@@ -47,7 +47,6 @@ class Runner(dl.BaseServiceRunner):
         )
         logger.info("Ollama server started with PID: %d", self.server_process.pid)
 
-        logger.info("Starting output streaming threads...")
         threading.Thread(
             target=_stream_output,
             args=(self.server_process.stdout, logging.INFO),
@@ -58,9 +57,7 @@ class Runner(dl.BaseServiceRunner):
             args=(self.server_process.stderr, logging.WARNING, "[stderr] "),
             daemon=True,
         ).start()
-        logger.info("Output streaming threads started")
 
-        logger.info("Waiting for Ollama to be ready...")
         self._wait_for_ready()
         logger.info("Ollama is ready, starting model warmup in background...")
 
@@ -130,7 +127,6 @@ class Runner(dl.BaseServiceRunner):
 
         t0 = time.time()
         try:
-            logger.info("Sending warmup request to %s with %ds timeout...", req.full_url, timeout)
             with urllib.request.urlopen(req, timeout=timeout) as resp:
                 body = json.loads(resp.read())
                 elapsed = time.time() - t0
