@@ -5,63 +5,42 @@ Flow:
   1. GET gate URL with Bearer token -> 302 redirect to apps URL
   2. All subsequent requests go directly to the apps URL (no auth needed)
 
-Login is handled automatically by the login() function using RUN_ENV from test_configs.
+Login is handled automatically by the login() function using RUN_ENV defined below.
 """
 
 import json
 import dtlpy as dl
-import requests
 from dotenv import load_dotenv
 import os
 
-from test_configs import TEST_MODELS, Environment, RUN_ENV, PROJECT_ID
+PROJECT_ID = "afd5a953-b88d-439c-afdf-9486ab3a94c2"
+
+RUN_ENV = "rc"
+
+TEST_MODELS = [
+    {"model_name": "gpt-oss:20b","dpk_name": "ollama-server-gpt-oss-20b",  "service_name": "ollama-service-gpt-oss-20b"},    
+    {"model_name": "qwen3.5:9b", "dpk_name": "ollama-server-qwen35", "service_name": "ollama-service-qwen35"}, 
+    {"model_name": "phi4-mini","dpk_name": "ollama-server-phi4", "service_name": "ollama-service-phi4"}, 
+]
 
 
 def login(env):
     """Login to Dataloop using API key from environment.
 
     Args:
-        env: Environment to use (Environment.PROD or Environment.RC)
+        env: Environment string ('prod' or 'rc')
     """
-    if (env == Environment.PROD):
+    if env == "prod":
         load_dotenv(override=True)
-        dl.setenv(env.value)
+        dl.setenv(env)
         api_key = os.getenv('DTLPY_API_KEY')
         dl.login_api_key(api_key=api_key)
     else:
-        dl.setenv(env.value)
+        dl.setenv(env)
         if dl.token_expired():
             dl.login(callback_port=7364)
 
 
-
-def create_session(jwt_app):
-    """Create a requests session with JWT-APP cookie for authentication."""
-    session = requests.Session()
-    if jwt_app:
-        session.cookies.set("JWT-APP", jwt_app)
-    return session
-
-
-def setup_session(app_id, service_name):
-    """Setup session by following redirect to get apps URL and JWT cookie.
-
-    Args:
-        app_id: The installed app ID used to look up the service name and build the gate URL.
-    Returns:
-        tuple: (apps_url, jwt_app)
-    Raises:
-        RuntimeError: If the gate request does not redirect to an apps URL.
-    """
-    gate_base = f"https://gate.dataloop.ai/api/v1/apps/{service_name}-{app_id}/panels"
-    session = requests.Session()
-    resp = session.get(gate_base + "/v1", headers=dl.client_api.auth)
-    if not resp.url or "apps.dataloop.ai" not in resp.url:
-        raise RuntimeError(f"Unexpected redirect target: {resp.url} (status {resp.status_code})")
-    apps_url = resp.url.rstrip("/")
-    jwt_app = session.cookies.get("JWT-APP")
-    print(f"APPS_URL resolved: {apps_url}")
-    return apps_url, jwt_app
 
 
 def test_app_model_request(model_name, app_id):
@@ -93,11 +72,12 @@ def test_app_chat_simple(model_name, app_id):
     response = app.request(
         method='POST',
         path='/v1/chat/completions',
-        json={
+        data=json.dumps({
             "model": model_name,
             "messages": [{"role": "user", "content": "Say hello"}],
-            "max_tokens": 512,
-        }
+            "max_tokens": 512
+        }, separators=(',', ':')),
+        headers={"Content-Type": "application/json"},
     )
     resp_json = response.json()
     # print(f"  Full response JSON: {resp_json}")
@@ -108,25 +88,28 @@ def test_app_chat_simple(model_name, app_id):
     print(f"  Response: {msg}")
     print("PASS\n")
 
-def test_chat_openai_streaming(model_name, app_id, service_name):
-    """Test POST /v1/chat/completions with streaming via direct HTTP and assert non-empty response.
+def test_chat_openai_streaming(model_name, app_id):
+    """Test POST /v1/chat/completions with streaming via app.request and assert non-empty response.
 
     Args:
         model_name: The Ollama model name to test (e.g. 'phi4-mini').
-        app_id: The Dataloop app ID used to resolve the apps URL via setup_session.
+        app_id: The Dataloop app ID of the deployed Ollama service.
     """
     print(f"--- POST /v1/chat/completions openai (streaming) - {model_name} ---")
-    apps_url, jwt_app = setup_session(app_id, service_name)
-    session = create_session(jwt_app)
-
-    url = apps_url.rstrip("/") + "/chat/completions"
-    resp = session.post(url, json={
-        "model": model_name,
-        "messages": [{"role": "user", "content": "Count from 1 to 5."}],
-        "max_tokens": 512,
-        "stream": True,
-    }, timeout=180, stream=True)
-    print(f"  [{resp.status_code}] {url}")
+    app = dl.apps.get(app_id=app_id)
+    resp = app.request(
+        method='POST',
+        path='/v1/chat/completions',
+        data=json.dumps({
+            "model": model_name,
+            "messages": [{"role": "user", "content": "Count from 1 to 5."}],
+            "max_tokens": 512,
+            "stream": True,
+        }, separators=(',', ':')),
+        headers={"Content-Type": "application/json"},
+        stream=True,
+    )
+    print(f"  [{resp.status_code}]")
     resp.raise_for_status()
 
     print("  Response: ", end="")
@@ -171,5 +154,5 @@ if __name__ == "__main__":
 
         test_app_model_request(model_name, app_id)
         test_app_chat_simple(model_name, app_id)
-        test_chat_openai_streaming(model_name, app_id, service_name)        
+        test_chat_openai_streaming(model_name, app_id)        
     print("All tests passed.")
