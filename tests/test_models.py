@@ -10,7 +10,6 @@ Login is handled automatically by the login() function using RUN_ENV defined bel
 
 import json
 import dtlpy as dl
-from dotenv import load_dotenv
 
 PROJECT_NAME = "project-name"
 
