@@ -11,16 +11,16 @@ Login is handled automatically by the login() function using RUN_ENV defined bel
 import json
 import dtlpy as dl
 from dotenv import load_dotenv
-import os
 
-PROJECT_ID = "afd5a953-b88d-439c-afdf-9486ab3a94c2"
+PROJECT_NAME = "project-name"
 
 RUN_ENV = "rc"
 
-TEST_MODELS = [
-    {"model_name": "gpt-oss:20b","dpk_name": "ollama-server-gpt-oss-20b",  "service_name": "ollama-service-gpt-oss-20b"},    
-    {"model_name": "qwen3.5:9b", "dpk_name": "ollama-server-qwen35", "service_name": "ollama-service-qwen35"}, 
-    {"model_name": "phi4-mini","dpk_name": "ollama-server-phi4", "service_name": "ollama-service-phi4"}, 
+# Make sure to update this list with the DPK names of the deployed Ollama services
+DPK_NAMES = [
+    "ollama-server-gpt-oss-20b",    
+    "ollama-server-qwen35",
+    "ollama-server-phi4", 
 ]
 
 
@@ -30,27 +30,19 @@ def login(env):
     Args:
         env: Environment string ('prod' or 'rc')
     """
-    if env == "prod":
-        load_dotenv(override=True)
-        dl.setenv(env)
-        api_key = os.getenv('DTLPY_API_KEY')
-        dl.login_api_key(api_key=api_key)
-    else:
-        dl.setenv(env)
-        if dl.token_expired():
-            dl.login(callback_port=7364)
+    dl.setenv(env)
+    if dl.token_expired():
+        dl.login()
 
 
-
-
-def test_app_model_request(model_name, app_id):
+def test_app_model_request(dpk_name, app_id):
     """Test GET /v1/models via app.request and assert the model is listed.
 
     Args:
-        model_name: The Ollama model name to test (e.g. 'phi4-mini').
+        dpk_name: The DPK name of the deployed Ollama service.
         app_id: The Dataloop app ID of the deployed Ollama service.
     """
-    print(f"--- GET /v1/models (via app.request) - {model_name} ---")
+    print(f"--- GET /v1/models (via app.request) - {dpk_name} ---")
     app = dl.apps.get(app_id=app_id)
     response = app.request(
         method='GET',
@@ -59,6 +51,7 @@ def test_app_model_request(model_name, app_id):
     print(f"  Response: {response.text}")
     assert response.status_code == 200, f"Expected 200, got {response.status_code}"
     print("PASS\n")
+    return response.json()
 
 def test_app_chat_simple(model_name, app_id):
     """Test POST /v1/chat/completions via app.request and assert a non-empty reply.
@@ -133,16 +126,13 @@ if __name__ == "__main__":
     # Run all tests
     login(RUN_ENV)
 
-    # Iterate over all models in TEST_MODELS
-    for model_config in TEST_MODELS:
-        model_name = model_config['model_name']
-        service_name = model_config['service_name']
-        dpk_name = model_config['dpk_name']
-
+    # Iterate over all DPK names in DPK_NAMES
+    for dpk_name in DPK_NAMES:
         print(f"\n{'='*60}")
-        print(f"Testing model: {model_name} ")
+        print(f"Testing DPK: {dpk_name} ")
         print(f"{'='*60}\n")
-        project = dl.projects.get(project_id=PROJECT_ID)
+        model_name = None
+        project = dl.projects.get(project_name=PROJECT_NAME)
         dpk = project.dpks.get(dpk_name=dpk_name)
         try:
             app = project.apps.get(app_name=dpk.display_name)  # get existing
@@ -152,7 +142,11 @@ if __name__ == "__main__":
 
         app_id = app.id
 
-        test_app_model_request(model_name, app_id)
+        response = test_app_model_request(dpk_name, app_id)
+        models = response.get('data', [])
+        if models:
+            model_name = models[0]['id']
+        
         test_app_chat_simple(model_name, app_id)
         test_chat_openai_streaming(model_name, app_id)        
     print("All tests passed.")
