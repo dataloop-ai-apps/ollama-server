@@ -67,16 +67,16 @@
                 "maxAttempts": 3
             }
         ],
-        "metadata": {
-             "contextWindow": 128000,
+        "metadata": [{
+            "contextWindow": 128000,
             "maxOutputTokens": 16384,
             "capabilities": {
-            "chat": true,
-            "embeddings": false,
-            "functionCalling": true,
-            "vision": true,
-            "streaming": true
+                "chat": true,
+                "embeddings": false,
+                "functionCalling": true,
+                "vision": true,
+                "streaming": true
             }
-        }
+        }]
     }
 }
