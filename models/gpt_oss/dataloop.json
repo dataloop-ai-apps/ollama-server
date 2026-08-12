@@ -11,7 +11,7 @@
         "Application Type": "Model",
         "License": "MIT"
       },
-    "description": "Local LLM inference via Ollama — OpenAI-compatible /v1 API on port 3000. Includes phi4-mini (chat), qwen2.5:1.5b (chat), and nomic-embed-text (embedding).",
+    "description": "Local LLM inference via Ollama",
     "components": {
         "panels": [
             {
@@ -66,6 +66,17 @@
                 "executionTimeout": 3600,
                 "maxAttempts": 3
             }
-        ]
+        ],
+        "metadata": {
+             "contextWindow": 128000,
+            "maxOutputTokens": 16384,
+            "capabilities": {
+            "chat": true,
+            "embeddings": false,
+            "functionCalling": true,
+            "vision": true,
+            "streaming": true
+            }
+        }
     }
 }
