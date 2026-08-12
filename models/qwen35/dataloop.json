@@ -66,6 +66,19 @@
                 "executionTimeout": 3600,
                 "maxAttempts": 3
             }
+        ],
+        "metadata": [
+            {
+                "contextWindow": 262144,
+                "maxOutputTokens": 262144,
+                "capabilities": {
+                    "chat": true,
+                    "embeddings": false,
+                    "functionCalling": false,
+                    "vision": false,
+                    "streaming": false
+                }
+            }
         ]
     }
 }
