@@ -1,7 +1,7 @@
 {
     "name": "ollama-server-qwen35",
     "displayName": "Ollama Server - Qwen3.5",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "scope": "public",
     "attributes": {
         "Category": [
