@@ -1,0 +1,84 @@
+{
+    "name": "ollama-server-gpt-oss-20b",
+    "displayName": "Ollama Server - GPT OSS 20B",
+    "version": "1.0.2",
+    "scope": "public",
+    "attributes": {
+        "Category": [
+          "Application"
+        ],
+        "Provider": "Ollama",
+        "Application Type": "Model",
+        "License": "MIT"
+      },
+    "description": "Local LLM inference via Ollama",
+    "components": {
+        "panels": [
+            {
+                "name": "ollama",
+                "supportedSlots": [
+                ],
+                "conditions": {}
+            }
+        ],
+        "modules": [
+            {
+                "name": "ollama-module",
+                "entryPoint": "runner.py",    
+                "className": "Runner",
+                "initInputs": [],
+                "config": {
+                    "isCustomServer": true
+                },
+                "functions": [
+                    {
+                        "name": "dummy",
+                        "output": [],
+                        "input": []
+                    }
+                ]
+            }
+        ],
+        "services": [
+            {
+                "name": "ollama-service-gpt-oss-20b",
+                "displayName": "Ollama Server - GPT OSS 20B",
+                "moduleName": "ollama-module",
+                "panelNames": ["ollama"],
+                "initParams": {},
+                "runtime": {
+                    "podType": "gpu-t4",
+                    "numReplicas": 1,
+                    "concurrency": 10,
+                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.21",                    
+                    "singleAgent": false,
+                    "autoscaler": {
+                        "type": "rabbitmq",
+                        "minReplicas": 1,
+                        "maxReplicas": 1,
+                        "queueLength": 1
+                    },
+                    "preemptible": false
+                },
+                "drainTime": 600,
+                "onReset": "failed",
+                "runExecutionAsProcess": false,
+                "executionTimeout": 3600,
+                "maxAttempts": 3
+            }
+        ],
+        "metadata": [
+            {
+                "contextWindow": 131072,
+                "maxOutputTokens": 131072,
+                "capabilities": {
+                    "chat": true,
+                    "embeddings": false,
+                    "functionCalling": true,
+                    "vision": false,
+                    "streaming": true
+                }
+            }
+        ]
+    }
+}

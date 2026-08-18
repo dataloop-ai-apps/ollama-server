@@ -1,6 +1,6 @@
 {
-    "name": "ollama-server",
-    "displayName": "Ollama Server",
+    "name": "ollama-server-phi4",
+    "displayName": "Ollama Server - Phi4",
     "version": "1.0.2",
     "scope": "public",
     "attributes": {
@@ -11,7 +11,7 @@
         "Application Type": "Model",
         "License": "MIT"
       },
-    "description": "Local LLM inference via Ollama — OpenAI-compatible /v1 API on port 3000. Includes phi4-mini (chat), qwen2.5:1.5b (chat), and nomic-embed-text (embedding).",
+    "description": "Local LLM inference via Ollama",
     "components": {
         "panels": [
             {
@@ -41,8 +41,8 @@
         ],
         "services": [
             {
-                "name": "ollama-service",
-                "displayName": "Ollama Server",
+                "name": "ollama-service-phi4",
+                "displayName": "Ollama Server - Phi4",
                 "moduleName": "ollama-module",
                 "panelNames": ["ollama"],
                 "initParams": {},
@@ -50,7 +50,7 @@
                     "podType": "highmem-m",
                     "numReplicas": 1,
                     "concurrency": 10,
-                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:1.0.1",
+                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.20",                    
                     "singleAgent": false,
                     "autoscaler": {
                         "type": "rabbitmq",
@@ -66,6 +66,19 @@
                 "executionTimeout": 3600,
                 "maxAttempts": 3
             }
-        ]
+        ],
+        "metadata": [
+            {
+                "contextWindow": 16000,
+                "maxOutputTokens": 16000,
+                "capabilities": {
+                    "chat": true,
+                    "embeddings": false,
+                    "functionCalling": false,
+                    "vision": false,
+                    "streaming": false
+                }
+            }
+    ]
     }
 }
