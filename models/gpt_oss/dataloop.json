@@ -1,7 +1,7 @@
 {
     "name": "ollama-server-gpt-oss-20b",
     "displayName": "Ollama Server - GPT OSS 20B",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "scope": "public",
     "attributes": {
         "Category": [
