@@ -69,6 +69,7 @@
         ],
         "metadata": [
             {
+                "model": "qwen35",
                 "contextWindow": 262144,
                 "maxOutputTokens": 262144,
                 "capabilities": {

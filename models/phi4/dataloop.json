@@ -69,6 +69,7 @@
         ],
         "metadata": [
             {
+                "model": "phi4",
                 "contextWindow": 16000,
                 "maxOutputTokens": 16000,
                 "capabilities": {
