@@ -1,0 +1,85 @@
+{
+    "name": "ollama-server-qwen3",
+    "displayName": "Ollama Server - Qwen3",
+    "version": "1.0.3",
+    "scope": "public",
+    "attributes": {
+        "Category": [
+          "Application"
+        ],
+        "Provider": "Ollama",
+        "Application Type": "Model",
+        "License": "MIT"
+      },
+    "description": "Local LLM inference via Ollama",
+    "components": {
+        "panels": [
+            {
+                "name": "ollama",
+                "supportedSlots": [
+                ],
+                "conditions": {}
+            }
+        ],
+        "modules": [
+            {
+                "name": "ollama-module",
+                "entryPoint": "runner.py",    
+                "className": "Runner",
+                "initInputs": [],
+                "config": {
+                    "isCustomServer": true
+                },
+                "functions": [
+                    {
+                        "name": "dummy",
+                        "output": [],
+                        "input": []
+                    }
+                ]
+            }
+        ],
+        "services": [
+            {
+                "name": "ollama-service-qwen3",
+                "displayName": "Ollama Server - Qwen3",
+                "moduleName": "ollama-module",
+                "panelNames": ["ollama"],
+                "initParams": {},
+                "runtime": {
+                    "podType": "highmem-m",
+                    "numReplicas": 1,
+                    "concurrency": 10,
+                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.18",                    
+                    "singleAgent": false,
+                    "autoscaler": {
+                        "type": "rabbitmq",
+                        "minReplicas": 1,
+                        "maxReplicas": 1,
+                        "queueLength": 1
+                    },
+                    "preemptible": false
+                },
+                "drainTime": 600,
+                "onReset": "failed",
+                "runExecutionAsProcess": false,
+                "executionTimeout": 3600,
+                "maxAttempts": 3
+            }
+        ],
+        "metadata": [
+            {
+                "model": "qwen3",
+                "contextWindow": 262144,
+                "maxOutputTokens": 262144,
+                "capabilities": {
+                    "chat": true,
+                    "embeddings": false,
+                    "functionCalling": false,
+                    "vision": false,
+                    "streaming": false
+                }
+            }
+        ]
+    }
+}
