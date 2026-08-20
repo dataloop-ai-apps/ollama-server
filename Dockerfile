@@ -1,4 +1,4 @@
-FROM hub.dataloop.ai/dtlpy-runner-images/cpu:python3.12_opencv
+FROM hub.dataloop.ai/dtlpy-runner-images/gpu:python3.12_cuda11.8_opencv
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends zstd && \
@@ -11,7 +11,7 @@ ENV PATH="/usr/local/bin:${PATH}"
 # Pre-pull models at build time so the container starts instantly
 RUN ollama serve & OLLAMA_PID=$! && \
     sleep 5 && \    
-    ollama pull phi4-mini && \
+    ollama pull qwen3.5:9b && \    
     kill $OLLAMA_PID || true
 
 ENV OLLAMA_HOST=0.0.0.0:3000
@@ -20,5 +20,5 @@ EXPOSE 3000
 
 
 # Build & push (this is the sole runtime image; app code is deployed via FaaS codebase):
-# docker build --no-cache -t gcr.io/viewo-g/piper/agent/ollama-server:1.0.1 -f Dockerfile .
-# docker push gcr.io/viewo-g/piper/agent/ollama-server:1.0.1
+# docker build --no-cache -t gcr.io/viewo-g/piper/agent/ollama-server:qwen-3.5-1.0.0 -f Dockerfile .
+# docker push gcr.io/viewo-g/piper/agent/ollama-server:qwen-3.5-1.0.0

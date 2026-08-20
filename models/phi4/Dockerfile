@@ -20,5 +20,5 @@ EXPOSE 3000
 
 
 # Build & push (this is the sole runtime image; app code is deployed via FaaS codebase):
-# docker build --no-cache -t gcr.io/viewo-g/piper/agent/ollama-server:1.0.1 -f Dockerfile .
-# docker push gcr.io/viewo-g/piper/agent/ollama-server:1.0.1
+# docker build --no-cache -t gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:phi4-mini-1.0.0 -f Dockerfile .
+# docker push gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:phi4-mini-1.0.0
