@@ -50,7 +50,7 @@
                     "podType": "highmem-m",
                     "numReplicas": 1,
                     "concurrency": 10,
-                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.18",                    
+                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:qwen-3-4b-1.0.0",                    
                     "singleAgent": false,
                     "autoscaler": {
                         "type": "rabbitmq",
