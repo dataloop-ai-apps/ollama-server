@@ -1,7 +1,7 @@
 {
-    "name": "ollama-server-qwen3",
-    "displayName": "Ollama Server - Qwen3",
-    "version": "1.0.3",
+    "name": "ollama-server-gemma3",
+    "displayName": "Ollama Server - Gemma3",
+    "version": "1.0.0",
     "scope": "public",
     "attributes": {
         "Category": [
@@ -41,8 +41,8 @@
         ],
         "services": [
             {
-                "name": "ollama-service-qwen3",
-                "displayName": "Ollama Server - Qwen3",
+                "name": "ollama-service-gemma3",
+                "displayName": "Ollama Server - Gemma3",
                 "moduleName": "ollama-module",
                 "panelNames": ["ollama"],
                 "initParams": {},
@@ -50,7 +50,7 @@
                     "podType": "highmem-l",
                     "numReplicas": 1,
                     "concurrency": 10,
-                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:qwen-3-4b-1.0.0",                    
+                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gemma3-4b-1.0.0",                    
                     "singleAgent": false,
                     "autoscaler": {
                         "type": "rabbitmq",
@@ -69,7 +69,7 @@
         ],
         "metadata": [
             {
-                "model": "qwen3",
+                "model": "gemma3",
                 "contextWindow": 262144,
                 "maxOutputTokens": 262144,
                 "capabilities": {
