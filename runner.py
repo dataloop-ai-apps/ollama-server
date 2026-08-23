@@ -58,10 +58,8 @@ class Runner(dl.BaseServiceRunner):
         self._wait_for_ready()
         logger.info("Runner initialization complete, service is ready")
 
-        threading.Thread(
-            target=self._warmup_model,
-            daemon=True,
-        ).start()
+        self._warmup_model()
+        logger.info("Runner initialization complete, service is ready")
 
     def _log_system_info(self):
         """Log system memory and GPU information."""
