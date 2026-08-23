@@ -2,6 +2,7 @@ import json
 import logging
 import subprocess
 import threading
+import os
 import time
 import urllib.error
 import urllib.request
@@ -151,6 +152,8 @@ class Runner(dl.BaseServiceRunner):
         ]
         start = time.time()
         while time.time() - start < timeout:
+            if self.server_process.poll() is not None:
+                raise RuntimeError(f"Ollama process exited with code {self.server_process.returncode}")
             for url in urls:
                 try:
                     with urllib.request.urlopen(url, timeout=2) as resp:
