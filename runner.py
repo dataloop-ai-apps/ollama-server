@@ -93,7 +93,7 @@ class Runner(dl.BaseServiceRunner):
 
     def _warmup_model(self, timeout=3600):
         """Warm up the model by sending a minimal chat request."""
-        model_name = os.environ.get("OLLAMA_WARMUP_MODEL", "gpt-oss:20b")
+        model_name = os.environ.get("OLLAMA_WARMUP_MODEL", "")
         if not model_name:
             logger.info("Skipping warmup — OLLAMA_WARMUP_MODEL not set")
             return
