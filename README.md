@@ -10,8 +10,10 @@ Use it when you want **in-house inference** (privacy, cost control, or custom mo
 
 This repository provides separate DPK configurations for different Ollama models:
 
-- **Phi-4 Mini**: A 3.8B parameter chat model running on CPU - see [apps/model_phi4/README.md](apps/model_phi4/README.md) for details
-- **Qwen3.5**: A 9B parameter reasoning-focused chat model running on GPU - see [apps/model_qwen35/README.md](apps/model_qwen35/README.md) for details
+- **Gemma3**: A 4B parameter chat model running on CPU - see [models/gemma3/README.md](models/gemma3/README.md) for details
+- **Qwen3**: A 4B parameter hybrid-reasoning chat model running on CPU - see [models/qwen3/README.md](models/qwen3/README.md) for details
+- **Phi-4 Mini**: A 3.8B parameter chat model running on CPU - see [models/phi4/README.md](models/phi4/README.md) for details
+- **Qwen3.5**: A 9B parameter reasoning-focused chat model running on GPU - see [models/qwen35/README.md](models/qwen35/README.md) for details
 - **Chat-OSS**: A 20B parameter chat model running on GPU - see [models/gpt_oss/README.md](models/gpt_oss/README.md) for details
 
 ## Testing
@@ -35,11 +37,13 @@ The app brings Ollama up and waits until the service responds to health checks b
 
 This repository includes separate DPK configurations for different models. Each model folder contains its own README with model-specific details.
 
-| Name              | Use        | Resources | Documentation        |
-|-------------------|------------|-----------|----------------------|
-| `phi4-mini`       | Chat       | CPU       | [apps/model_phi4/README.md](apps/model_phi4/README.md) |
-| `qwen3.5:9b`     | Chat       | GPU       | [apps/model_qwen35/README.md](apps/model_qwen35/README.md) |
-| `chat-oss:20b`   | Chat       | GPU       | [models/gpt_oss/README.md](models/gpt_oss/README.md) |
+| Name              | Use                 | Resources | Documentation        |
+|-------------------|---------------------|-----------|----------------------|
+| `gemma3:4b`       | Chat                | CPU       | [models/gemma3/README.md](models/gemma3/README.md) |
+| `qwen3:4b`        | Chat (Reasoning)    | CPU       | [models/qwen3/README.md](models/qwen3/README.md) |
+| `phi4-mini`       | Chat                | CPU       | [models/phi4/README.md](models/phi4/README.md) |
+| `qwen3.5:9b`      | Chat (Reasoning)    | GPU       | [models/qwen35/README.md](models/qwen35/README.md) |
+| `chat-oss:20b`    | Chat                | GPU       | [models/gpt_oss/README.md](models/gpt_oss/README.md) |
 
 ## What the service exposes (overview)
 
@@ -126,4 +130,4 @@ After you add an embedding model, you can test embeddings the same way using tha
 
 ## Next Step: more models
 
-The next step for this DPK is to **ship the remaining models** in the container build (Qwen, Nomic, or any others you standardize on), then refresh registration and documentation so teams see the full list. Until then, the published image focuses on **phi4-mini** for chat.
+Additional models can be added by creating a new folder under `models/`, providing a `Dockerfile` that pre-pulls the model at build time, a `dataloop.json` with the service configuration, and a `README.md` following the pattern of the existing model folders. Embedding models (e.g., Nomic) are a natural next addition to unlock the embeddings endpoint.

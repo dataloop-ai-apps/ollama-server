@@ -1,77 +1,73 @@
-# Qwen3.5 — Ollama Model
+# Qwen3 — Ollama Model
 
-**Qwen3.5** is a reasoning-focused open-source chat model served via Ollama, running on GPU (T4). This model is designed for advanced reasoning tasks with transparent thinking processes.
+**Qwen3** is a 4-billion-parameter open-source model by Alibaba Cloud, served via Ollama, running on CPU. It supports a hybrid thinking mode — it can reason step-by-step before answering or respond directly, making it well suited for tasks that benefit from structured reasoning.
 
 ## Model Overview
 
-Qwen3.5 is a reasoning model suitable for:
+Qwen3 is a compact reasoning-capable model suitable for:
+- General conversational AI applications
 - Complex reasoning and problem-solving
-- Step-by-step thinking and explanation
+- Step-by-step thinking and explanation (thinking mode)
 - Technical documentation and explanations
-- Advanced conversational AI applications
-- Multi-turn dialogues with context retention
+- Multi-turn dialogues with long context retention
 
 ## Model Specifications
 
 | Property | Value |
 |---|---|
-| Ollama model name | `qwen3.5:9b` |
-| Ollama model page | [https://ollama.com/library/qwen3.5](https://ollama.com/library/qwen3.5) |
-| Type | Chat (Reasoning) |
-| Parameters | 9 B |
+| Ollama model name | `qwen3:4b` |
+| Ollama model page | [https://ollama.com/library/qwen3](https://ollama.com/library/qwen3) |
+| Type | Chat (Hybrid Reasoning) |
+| Parameters | 4 B |
 | Architecture | Transformer-based |
+| Context window | 262,144 tokens |
 | Streaming | Yes |
-| Pod type | `gpu-t4-m` (GPU) |
-| DPK name | `ollama-server-qwen35` |
+| Pod type | `highmem-l` (CPU) |
+| DPK name | `ollama-server-qwen3` |
 
 ## Resource Requirements
 
-- **GPU**: NVIDIA T4-m with 16GB VRAM minimum
-- **Model size**: ~9-10 GiB in memory
-- **Warmup time**: 5-10 minutes for initial model load
-- **Recommended timeout**: 300-600s for cold-start scenarios
+- **CPU**: High-memory CPU instance (`highmem-l`)
+- **Model size**: ~2-4 GiB in memory (quantized)
+- **Warmup time**: 1-2 minutes for initial model load
+- **Recommended timeout**: 300s (5 minutes) for cold-start scenarios
 
-The model requires GPU memory and benefits from warmup to ensure full initialization before serving requests.
+The model runs on CPU without requiring a GPU. The image configures `OLLAMA_WARMUP_MODEL=qwen3:4b` so the model is loaded into memory on container start — requests are served immediately without a cold-start delay.
 
 ## Performance Characteristics
 
-- **Latency**: Moderate - reasoning process adds latency
-- **Throughput**: Optimized for streaming responses
-- **Quality**: Enhanced reasoning capabilities with transparent thinking
-- **Context retention**: Good ability to maintain context over conversations
-- **Response structure**: Outputs reasoning process before final answer
+- **Latency**: Low in standard mode; moderate in thinking mode (reasoning adds tokens)
+- **Throughput**: Good for real-time applications with streaming
+- **Quality**: Strong reasoning capabilities for its size class
+- **Context retention**: Excellent — 262K token context window
+- **Response structure**: Standard chat by default; prepends reasoning trace when thinking mode is enabled
 
 ## Deployment Considerations
 
-### Reasoning Model Behavior
-Qwen3.5 is a reasoning model that outputs its thinking process before the final answer. The API response includes:
-- `reasoning`: The model's step-by-step thinking process
-- `content`: The final answer
+### Hybrid Thinking Mode
+Qwen3 supports two modes controlled via the `thinking` parameter in requests:
+- **Thinking mode (default on)**: The model outputs a `<think>...</think>` reasoning block before the final answer. Use `max_tokens` of 512+ to avoid truncating the reasoning trace.
+- **Non-thinking mode**: Pass `/no_think` in the system prompt or set `thinking: false` to get a direct response without the reasoning prefix.
 
-This requires higher `max_tokens` values (256-512) to accommodate both the reasoning process and the final answer.
+### Warmup Configuration
+The service uses `OLLAMA_WARMUP_MODEL=qwen3:4b` to pre-load the model on startup, avoiding cold-start latency on the first request.
 
 ### Resource Management
-- Ensure sufficient GPU memory is available (16GB+ VRAM recommended)
-- Monitor GPU utilization during inference
-- Consider autoscaling settings based on expected load
-- Increase `max_tokens` in requests to avoid truncation
-
-### Model-Specific Configuration
-The model uses the standard Ollama runner without custom warmup configuration. Set `max_tokens` to 256-512 in your requests to ensure complete responses.
+- Ensure sufficient CPU memory is available (8GB+ recommended)
+- Monitor CPU utilization during inference
+- Suitable for horizontal scaling due to lower resource requirements
 
 ## Model Information
 
-Qwen3.5 is an open-source reasoning model available through Ollama. It provides transparent reasoning processes, showing step-by-step thinking before delivering the final answer. This makes it particularly useful for applications where understanding the model's thought process is valuable.
+Qwen3 is an open-source model from Alibaba Cloud, available through Ollama. It brings reasoning capability to a compact 4B parameter footprint, making structured thinking accessible without GPU infrastructure.
 
-The model is based on transformer architecture and has been trained to handle complex reasoning tasks. It supports streaming responses for real-time applications and can maintain context across multi-turn conversations.
-
-As a reasoning-focused model with 9B parameters, it offers enhanced reasoning capabilities while maintaining reasonable resource efficiency compared to larger models (20B+ parameters).
+The model supports a 262,144 token context window and is pre-pulled at image build time (`ollama pull qwen3:4b`), so no download occurs on the first request. It is based on transformer architecture and supports multi-turn dialogue, streaming responses, and both thinking and non-thinking output modes.
 
 ## Limitations
 
-- Higher latency due to reasoning process
-- Requires larger `max_tokens` to avoid truncation
-- Moderate resource requirements (GPU)
-- Reasoning output may not be needed for all use cases
+- CPU-bound inference is slower than GPU-accelerated models under heavy load
+- Thinking mode increases response latency and token count
+- No function calling or embeddings support in this deployment
+- 4B parameter size limits performance on highly specialized tasks compared to larger reasoning models (e.g., Qwen3.5 9B)
 
 For general deployment instructions, build/push procedures, and API testing, see the [root README](../../README.md).

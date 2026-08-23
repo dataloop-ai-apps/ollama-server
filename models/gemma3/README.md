@@ -1,77 +1,71 @@
-# Qwen3.5 — Ollama Model
+# Gemma3 — Ollama Model
 
-**Qwen3.5** is a reasoning-focused open-source chat model served via Ollama, running on GPU (T4). This model is designed for advanced reasoning tasks with transparent thinking processes.
+**Gemma3** is a 4-billion-parameter open-source chat model by Google DeepMind, served via Ollama, running on CPU. It is designed for general-purpose instruction following and conversational tasks with a very large context window.
 
 ## Model Overview
 
-Qwen3.5 is a reasoning model suitable for:
-- Complex reasoning and problem-solving
-- Step-by-step thinking and explanation
-- Technical documentation and explanations
-- Advanced conversational AI applications
-- Multi-turn dialogues with context retention
+Gemma3 is a lightweight, general-purpose model suitable for:
+- General conversational AI applications
+- Question answering and information retrieval
+- Text summarization and comprehension
+- Instruction following and task completion
+- Multi-turn dialogues with long context retention
 
 ## Model Specifications
 
 | Property | Value |
 |---|---|
-| Ollama model name | `qwen3.5:9b` |
-| Ollama model page | [https://ollama.com/library/qwen3.5](https://ollama.com/library/qwen3.5) |
-| Type | Chat (Reasoning) |
-| Parameters | 9 B |
+| Ollama model name | `gemma3:4b` |
+| Ollama model page | [https://ollama.com/library/gemma3](https://ollama.com/library/gemma3) |
+| Type | Chat |
+| Parameters | 4 B |
 | Architecture | Transformer-based |
+| Context window | 262,144 tokens |
 | Streaming | Yes |
-| Pod type | `gpu-t4-m` (GPU) |
-| DPK name | `ollama-server-qwen35` |
+| Pod type | `highmem-l` (CPU) |
+| DPK name | `ollama-server-gemma3` |
 
 ## Resource Requirements
 
-- **GPU**: NVIDIA T4-m with 16GB VRAM minimum
-- **Model size**: ~9-10 GiB in memory
-- **Warmup time**: 5-10 minutes for initial model load
-- **Recommended timeout**: 300-600s for cold-start scenarios
+- **CPU**: High-memory CPU instance (`highmem-l`)
+- **Model size**: ~2-4 GiB in memory (quantized)
+- **Warmup time**: 1-2 minutes for initial model load
+- **Recommended timeout**: 300s (5 minutes) for cold-start scenarios
 
-The model requires GPU memory and benefits from warmup to ensure full initialization before serving requests.
+The model runs on CPU without requiring a GPU, making it suitable for cost-efficient deployments. The 4B parameter count keeps memory requirements modest while supporting a very large context window.
 
 ## Performance Characteristics
 
-- **Latency**: Moderate - reasoning process adds latency
-- **Throughput**: Optimized for streaming responses
-- **Quality**: Enhanced reasoning capabilities with transparent thinking
-- **Context retention**: Good ability to maintain context over conversations
-- **Response structure**: Outputs reasoning process before final answer
+- **Latency**: Low — compact model runs efficiently on CPU
+- **Throughput**: Good throughput for real-time applications
+- **Quality**: Strong instruction following and general NLP performance
+- **Context retention**: Excellent — 262K token context window supports very long conversations and documents
+- **Response structure**: Standard chat output (no reasoning prefix)
 
 ## Deployment Considerations
 
-### Reasoning Model Behavior
-Qwen3.5 is a reasoning model that outputs its thinking process before the final answer. The API response includes:
-- `reasoning`: The model's step-by-step thinking process
-- `content`: The final answer
-
-This requires higher `max_tokens` values (256-512) to accommodate both the reasoning process and the final answer.
-
 ### Resource Management
-- Ensure sufficient GPU memory is available (16GB+ VRAM recommended)
-- Monitor GPU utilization during inference
-- Consider autoscaling settings based on expected load
-- Increase `max_tokens` in requests to avoid truncation
+- Ensure sufficient CPU memory is available (8GB+ recommended)
+- Monitor CPU utilization during inference
+- Suitable for horizontal scaling due to lower resource requirements
+- Faster cold-start times compared to larger GPU models
 
 ### Model-Specific Configuration
-The model uses the standard Ollama runner without custom warmup configuration. Set `max_tokens` to 256-512 in your requests to ensure complete responses.
+The model is pre-pulled at image build time (`ollama pull gemma3:4b`) so the container starts with the model already available — no download on first request. The default warmup timeout (300s) is sufficient for this model size.
 
 ## Model Information
 
-Qwen3.5 is an open-source reasoning model available through Ollama. It provides transparent reasoning processes, showing step-by-step thinking before delivering the final answer. This makes it particularly useful for applications where understanding the model's thought process is valuable.
+Gemma3 is an open-source model from Google DeepMind, available through Ollama. It provides strong general-purpose capabilities while remaining resource-efficient enough for CPU-only deployments.
 
-The model is based on transformer architecture and has been trained to handle complex reasoning tasks. It supports streaming responses for real-time applications and can maintain context across multi-turn conversations.
+The model supports a 262,144 token context window, enabling it to process and retain context across very long conversations or large documents in a single pass. It is based on transformer architecture and has been trained for instruction following and multi-turn dialogue.
 
-As a reasoning-focused model with 9B parameters, it offers enhanced reasoning capabilities while maintaining reasonable resource efficiency compared to larger models (20B+ parameters).
+As a 4B-parameter CPU model, it offers a good balance between capability and operational cost — well suited for organizations that need reliable general chat without GPU infrastructure.
 
 ## Limitations
 
-- Higher latency due to reasoning process
-- Requires larger `max_tokens` to avoid truncation
-- Moderate resource requirements (GPU)
-- Reasoning output may not be needed for all use cases
+- Lower reasoning depth compared to dedicated reasoning models (e.g., Qwen3)
+- CPU-bound inference is slower than GPU-accelerated models under heavy load
+- No function calling or embeddings support in this deployment
+- Performance on highly specialized tasks (advanced code generation, complex math) is limited relative to larger models
 
 For general deployment instructions, build/push procedures, and API testing, see the [root README](../../README.md).
