@@ -15,8 +15,12 @@ PROJECT_NAME = "project-name"
 
 RUN_ENV = "rc"
 
+suffix = ''
+
 # Make sure to update this list with the DPK names of the deployed Ollama services
 DPK_NAMES = [
+    "ollama-server-qwen3",
+    "ollama-server-gemma3",
     "ollama-server-gpt-oss-20b",    
     "ollama-server-qwen35",
     "ollama-server-phi4", 
@@ -132,7 +136,7 @@ if __name__ == "__main__":
         print(f"{'='*60}\n")
         model_name = None
         project = dl.projects.get(project_name=PROJECT_NAME)
-        dpk = project.dpks.get(dpk_name=dpk_name)
+        dpk = project.dpks.get(dpk_name=dpk_name + suffix)
         try:
             app = project.apps.get(app_name=dpk.display_name)  # get existing
         except dl.exceptions.NotFound:
