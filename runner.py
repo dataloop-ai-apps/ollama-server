@@ -59,38 +59,6 @@ class Runner(dl.BaseServiceRunner):
         self._warmup_model()
         logger.info("Runner initialization complete, service is ready")
 
-    def _log_system_info(self):
-        """Log system memory and GPU information."""
-        import psutil
-        mem = psutil.virtual_memory()
-        logger.info("System memory: total=%.2f GiB, available=%.2f GiB, used=%.2f GiB (%.1f%%)",
-                    mem.total / (1024**3), mem.available / (1024**3),
-                    mem.used / (1024**3), mem.percent)
-
-        try:
-            result = subprocess.run(
-                ["nvidia-smi", "--query-gpu=name,memory.total,memory.free", "--format=csv,noheader"],
-                capture_output=True,
-                text=True,
-                timeout=10
-            )
-            if result.returncode == 0:
-                logger.info("GPU info: %s", result.stdout.strip())
-            else:
-                logger.info("nvidia-smi not available or failed")
-        except Exception as e:
-            logger.info("Could not query GPU info: %s", e)
-
-    def _log_loaded_models(self):
-        """Log currently loaded models in Ollama."""
-        try:
-            with urllib.request.urlopen("http://localhost:3000/api/tags", timeout=5) as resp:
-                data = json.loads(resp.read())
-                models = [m.get('name', 'unknown') for m in data.get('models', [])]
-                logger.info("Loaded models: %s", models)
-        except Exception as e:
-            logger.warning("Could not query loaded models: %s", e)
-
     def _warmup_model(self, timeout=3600):
         """Warm up the model by sending a minimal chat request."""
         model_name = os.environ.get("OLLAMA_WARMUP_MODEL", "")
@@ -99,7 +67,6 @@ class Runner(dl.BaseServiceRunner):
             return
 
         logger.info("Warming up model '%s' (this may take several minutes on GPU) ...", model_name)
-        self._log_loaded_models()
 
         payload = json.dumps({
             "model": model_name,
