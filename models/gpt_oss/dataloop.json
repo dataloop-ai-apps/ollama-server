@@ -1,7 +1,7 @@
 {
     "name": "ollama-server-gpt-oss-20b",
     "displayName": "Ollama Server - GPT OSS 20B",
-    "version": "1.0.3",
+    "version": "1.0.15",
     "scope": "public",
     "attributes": {
         "Category": [
@@ -50,7 +50,7 @@
                     "podType": "gpu-t4",
                     "numReplicas": 1,
                     "concurrency": 10,
-                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gpt-oss-20b-1.0.0",                    
+                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gpt-oss-20b-1.0.1",                    
                     "singleAgent": false,
                     "autoscaler": {
                         "type": "rabbitmq",

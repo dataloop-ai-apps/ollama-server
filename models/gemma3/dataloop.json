@@ -1,7 +1,7 @@
 {
     "name": "ollama-server-gemma3",
     "displayName": "Ollama Server - Gemma3",
-    "version": "1.0.0",
+    "version": "1.0.15",
     "scope": "public",
     "attributes": {
         "Category": [
