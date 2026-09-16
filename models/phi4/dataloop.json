@@ -53,8 +53,7 @@
                     "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:phi4-mini-1.0.0",                    
                     "singleAgent": false,
                     "autoscaler": {
-                        "type": "rabbitmq",
-                        "minReplicas": 1,
+                        "type": "rps",
                         "maxReplicas": 1,
                         "queueLength": 1
                     },
