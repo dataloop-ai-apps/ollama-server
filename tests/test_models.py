@@ -17,14 +17,19 @@ RUN_ENV = "rc"
 
 suffix = ''
 
-# Make sure to update this list with the DPK names of the deployed Ollama services
-DPK_NAMES = [
-    "ollama-server-qwen3",
-    "ollama-server-gemma3",
-    "ollama-server-gpt-oss-20b",    
-    "ollama-server-qwen35",
-    "ollama-server-phi4", 
-]
+# Map DPK name → model type so the test loop calls the right test functions.
+# type "chat"      → test_app_chat_simple + test_chat_openai_streaming
+# type "embedding" → test_app_embeddings_simple
+DPK_CONFIGS = {
+    "ollama-server-qwen3":            {"model_type": "chat"},
+    "ollama-server-gemma3":           {"model_type": "chat"},
+    "ollama-server-gpt-oss-20b":      {"model_type": "chat"},
+    "ollama-server-qwen35":           {"model_type": "chat"},
+    "ollama-server-phi4":             {"model_type": "chat"},
+    "ollama-server-nomic-embed-text": {"model_type": "embedding"},
+}
+
+DPK_NAMES = list(DPK_CONFIGS.keys())
 
 
 def login(env):
@@ -83,6 +88,33 @@ def test_app_chat_simple(model_name, app_id):
         msg = resp_json["choices"][0]["message"]["reasoning"]
     print(f"  Response: {msg}")
     print("PASS\n")
+
+def test_app_embeddings_simple(model_name, app_id):
+    """Test POST /api/embed via app.request and assert a non-empty embedding vector.
+
+    Args:
+        model_name: The Ollama embedding model name (e.g. 'nomic-embed-text').
+        app_id: The Dataloop app ID of the deployed Ollama service.
+    """
+    print(f"--- POST /api/embed - {model_name} ---")
+    app = dl.apps.get(app_id=app_id)
+    response = app.request(
+        method='POST',
+        path='/api/embed',
+        data=json.dumps({
+            "model": model_name,
+            "input": "Hello, world!",
+        }, separators=(',', ':')),
+        headers={"Content-Type": "application/json"},
+    )
+    assert response.status_code == 200, f"Expected 200, got {response.status_code}"
+    resp_json = response.json()
+    embeddings = resp_json.get("embeddings", [])
+    assert len(embeddings) > 0, "Expected at least one embedding vector"
+    assert len(embeddings[0]) > 0, "Expected non-empty embedding vector"
+    print(f"  Embedding dimension: {len(embeddings[0])}")
+    print("PASS\n")
+
 
 def test_chat_openai_streaming(model_name, app_id):
     """Test POST /v1/chat/completions with streaming via app.request and assert non-empty response.
@@ -144,12 +176,16 @@ if __name__ == "__main__":
             continue
 
         app_id = app.id
+        model_type = DPK_CONFIGS.get(dpk_name, {}).get("model_type", "chat")
 
         response = test_app_model_request(dpk_name, app_id)
         models = response.get('data', [])
         if models:
             model_name = models[0]['id']
-        
-        test_app_chat_simple(model_name, app_id)
-        test_chat_openai_streaming(model_name, app_id)        
+
+        if model_type == "embedding":
+            test_app_embeddings_simple(model_name, app_id)
+        else:
+            test_app_chat_simple(model_name, app_id)
+            test_chat_openai_streaming(model_name, app_id)
     print("All tests passed.")

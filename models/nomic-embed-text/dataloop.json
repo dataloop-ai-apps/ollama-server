@@ -1,0 +1,84 @@
+{
+    "name": "ollama-server-nomic-embed-text",
+    "displayName": "Ollama Server - Nomic Embed Text",
+    "version": "1.0.15",
+    "scope": "public",
+    "attributes": {
+        "Category": [
+          "Application"
+        ],
+        "Provider": "Ollama",
+        "Application Type": "Model",
+        "License": "Apache 2.0"
+      },
+    "description": "Local text embedding via Ollama",
+    "components": {
+        "panels": [
+            {
+                "name": "ollama",
+                "supportedSlots": [
+                ],
+                "conditions": {}
+            }
+        ],
+        "modules": [
+            {
+                "name": "ollama-module",
+                "entryPoint": "runner.py",
+                "className": "Runner",
+                "initInputs": [],
+                "config": {
+                    "isCustomServer": true
+                },
+                "functions": [
+                    {
+                        "name": "dummy",
+                        "output": [],
+                        "input": []
+                    }
+                ]
+            }
+        ],
+        "services": [
+            {
+                "name": "ollama-service-nomic-embed-text",
+                "displayName": "Ollama Server - Nomic Embed Text",
+                "moduleName": "ollama-module",
+                "panelNames": ["ollama"],
+                "initParams": {},
+                "runtime": {
+                    "podType": "highmem-m",
+                    "numReplicas": 1,
+                    "concurrency": 10,
+                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:nomic-embed-text-1.0.0",
+                    "singleAgent": false,
+                    "autoscaler": {
+                        "type": "rps",
+                        "maxReplicas": 1,
+                        "queueLength": 1
+                    },
+                    "preemptible": false
+                },
+                "drainTime": 600,
+                "onReset": "failed",
+                "runExecutionAsProcess": false,
+                "executionTimeout": 3600,
+                "maxAttempts": 3
+            }
+        ],
+        "metadata": [
+            {
+                "model": "nomic-embed-text",
+                "contextWindow": 8192,
+                "embeddingDimension": 768,
+                "capabilities": {
+                    "chat": false,
+                    "embeddings": true,
+                    "functionCalling": false,
+                    "vision": false,
+                    "streaming": false
+                }
+            }
+        ]
+    }
+}

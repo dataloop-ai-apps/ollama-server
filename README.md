@@ -15,6 +15,7 @@ This repository provides separate DPK configurations for different Ollama models
 - **Phi-4 Mini**: A 3.8B parameter chat model running on CPU - see [models/phi4/README.md](models/phi4/README.md) for details
 - **Qwen3.5**: A 9B parameter reasoning-focused chat model running on GPU - see [models/qwen35/README.md](models/qwen35/README.md) for details
 - **Chat-OSS**: A 20B parameter chat model running on GPU - see [models/gpt_oss/README.md](models/gpt_oss/README.md) for details
+- **Nomic Embed Text**: A 137M parameter text embedding model running on CPU - see [models/nomic-embed-text/README.md](models/nomic-embed-text/README.md) for details
 
 ## Testing
 
@@ -44,6 +45,7 @@ This repository includes separate DPK configurations for different models. Each 
 | `phi4-mini`       | Chat                | CPU       | [models/phi4/README.md](models/phi4/README.md) |
 | `qwen3.5:9b`      | Chat (Reasoning)    | GPU       | [models/qwen35/README.md](models/qwen35/README.md) |
 | `chat-oss:20b`    | Chat                | GPU       | [models/gpt_oss/README.md](models/gpt_oss/README.md) |
+| `nomic-embed-text`| Embeddings          | CPU       | [models/nomic-embed-text/README.md](models/nomic-embed-text/README.md) |
 
 ## What the service exposes (overview)
 
