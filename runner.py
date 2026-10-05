@@ -44,9 +44,24 @@ class _ProxyHandler(BaseHTTPRequestHandler):
 
         url = f"http://localhost:{OLLAMA_PORT}{path}"
 
-        # Read request body
+        # Read request body (handles both Content-Length and chunked)
         content_length = int(self.headers.get("Content-Length", 0))
-        body = self.rfile.read(content_length) if content_length else None
+        if content_length:
+            body = self.rfile.read(content_length)
+        elif self.headers.get("Transfer-Encoding", "").lower() == "chunked":
+            # Read chunked body
+            chunks = []
+            while True:
+                size_line = self.rfile.readline().strip()
+                chunk_size = int(size_line, 16)
+                if chunk_size == 0:
+                    self.rfile.readline()  # trailing CRLF
+                    break
+                chunks.append(self.rfile.read(chunk_size))
+                self.rfile.readline()  # trailing CRLF
+            body = b"".join(chunks)
+        else:
+            body = None
 
         req = urllib.request.Request(url, data=body, method=self.command)
         for key, val in self.headers.items():
