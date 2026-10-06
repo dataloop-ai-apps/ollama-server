@@ -1,7 +1,7 @@
 {
     "name": "ollama-server-phi4",
     "displayName": "Ollama Server - Phi4",
-    "version": "1.0.4",
+    "version": "1.0.15",
     "scope": "public",
     "attributes": {
         "Category": [
@@ -50,11 +50,10 @@
                     "podType": "highmem-m",
                     "numReplicas": 1,
                     "concurrency": 10,
-                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:0.0.20",                    
+                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:phi4-mini-1.0.3",
                     "singleAgent": false,
                     "autoscaler": {
-                        "type": "rabbitmq",
-                        "minReplicas": 1,
+                        "type": "rps",
                         "maxReplicas": 1,
                         "queueLength": 1
                     },

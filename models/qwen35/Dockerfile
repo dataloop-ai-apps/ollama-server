@@ -16,9 +16,10 @@ RUN ollama serve & OLLAMA_PID=$! && \
 
 ENV OLLAMA_HOST=0.0.0.0:3000
 ENV OLLAMA_KEEP_ALIVE=-1
+ENV OLLAMA_WARMUP_MODEL=qwen3.5:9b
 EXPOSE 3000
 
 
 # Build & push (this is the sole runtime image; app code is deployed via FaaS codebase):
-# docker build --no-cache -t gcr.io/viewo-g/piper/agent/ollama-server:1.0.1 -f Dockerfile .
-# docker push gcr.io/viewo-g/piper/agent/ollama-server:1.0.1
+# docker build --no-cache -t gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:qwen-3.5-1.0.1 -f Dockerfile .
+# docker push gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:qwen-3.5-1.0.1
