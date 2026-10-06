@@ -23,5 +23,5 @@ EXPOSE 3000
 
 
 # Build & push (this is the sole runtime image; app code is deployed via FaaS codebase):
-# docker build --no-cache -t gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gpt-oss-20b-1.0.2 -f Dockerfile .
-# docker push gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gpt-oss-20b-1.0.2
+# docker build --no-cache -t gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gpt-oss-20b-1.0.3 -f Dockerfile .
+# docker push gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gpt-oss-20b-1.0.3

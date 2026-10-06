@@ -1,4 +1,4 @@
-FROM hub.dataloop.ai/dtlpy-runner-images/cpu:python3.12_opencv
+FROM hub.dataloop.ai/dtlpy-runner-images/gpu:python3.12_cuda11.8_opencv
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends zstd && \
@@ -11,17 +11,17 @@ ENV PATH="/usr/local/bin:${PATH}"
 # Pre-pull models at build time so the container starts instantly
 RUN ollama serve & OLLAMA_PID=$! && \
     sleep 5 && \    
-    ollama pull gemma3:4b && \
+    ollama pull gpt-oss:20b && \     
     kill $OLLAMA_PID || true
 
 RUN pip install --no-cache-dir httpx uvicorn fastapi
 
 ENV OLLAMA_HOST=0.0.0.0:3000
 ENV OLLAMA_KEEP_ALIVE=-1
-ENV OLLAMA_WARMUP_MODEL=gemma3:4b
+ENV OLLAMA_WARMUP_MODEL=gpt-oss:20b
 EXPOSE 3000
 
 
 # Build & push (this is the sole runtime image; app code is deployed via FaaS codebase):
-# docker build --no-cache -t gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gemma3-4b-1.0.4 -f Dockerfile .
-# docker push gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gemma3-4b-1.0.4
+# docker build --no-cache -t gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gpt-oss-20b-1.0.3 -f Dockerfile .
+# docker push gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gpt-oss-20b-1.0.3
