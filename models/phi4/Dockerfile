@@ -1,11 +1,11 @@
 FROM hub.dataloop.ai/dtlpy-runner-images/cpu:python3.13_full_bci
 
-RUN zypper --non-interactive install -y zstd curl && \
-    zypper clean --all && \
-    curl -fsSLk https://ollama.com/install.sh | sed 's/curl -/curl -k -/g' | sh && \
+RUN curl -fsSLk https://ollama.com/download/ollama-linux-amd64.tgz -o /tmp/ollama.tgz && \
+    tar -xzf /tmp/ollama.tgz -C /usr && \
+    rm /tmp/ollama.tgz && \
     ollama --version
 
-ENV PATH="/usr/local/bin:${PATH}"
+ENV PATH="/usr/local/bin:/usr/bin:${PATH}"
 
 # Pre-pull models at build time so the container starts instantly
 RUN ollama serve & OLLAMA_PID=$! && \
