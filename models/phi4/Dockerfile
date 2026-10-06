@@ -1,13 +1,11 @@
 FROM hub.dataloop.ai/dtlpy-runner-images/cpu:python3.13_full_bci
 
-RUN curl -fsSLk https://ollama.com/download/ollama-linux-amd64.tgz -o /tmp/ollama.tgz && \
+RUN curl -fsSLk -L https://github.com/ollama/ollama/releases/download/v0.9.0/ollama-linux-amd64.tgz \
+        -o /tmp/ollama.tgz && \
     tar -xzf /tmp/ollama.tgz -C /usr && \
     rm /tmp/ollama.tgz && \
     ollama --version
 
-ENV PATH="/usr/local/bin:/usr/bin:${PATH}"
-
-# Pre-pull models at build time so the container starts instantly
 RUN ollama serve & OLLAMA_PID=$! && \
     sleep 5 && \
     ollama pull phi4-mini && \
