@@ -140,7 +140,7 @@ class Runner(dl.BaseServiceRunner):
         }).encode()
 
         req = urllib.request.Request(
-            "http://localhost:3000/v1/chat/completions",
+            f"http://localhost:{OLLAMA_PORT}/v1/chat/completions",
             data=payload,
             headers={"Content-Type": "application/json"},
             method="POST",
