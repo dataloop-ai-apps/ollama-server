@@ -14,6 +14,8 @@ RUN ollama serve & OLLAMA_PID=$! && \
     ollama pull gpt-oss:20b && \     
     kill $OLLAMA_PID || true
 
+RUN pip install --no-cache-dir httpx uvicorn fastapi
+
 ENV OLLAMA_HOST=0.0.0.0:3000
 ENV OLLAMA_KEEP_ALIVE=-1
 ENV OLLAMA_WARMUP_MODEL=gpt-oss:20b
@@ -21,5 +23,5 @@ EXPOSE 3000
 
 
 # Build & push (this is the sole runtime image; app code is deployed via FaaS codebase):
-# docker build --no-cache -t gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gpt-oss-20b-1.0.1 -f Dockerfile .
-# docker push gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gpt-oss-20b-1.0.1
+# docker build --no-cache -t gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gpt-oss-20b-1.0.3 -f Dockerfile .
+# docker push gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gpt-oss-20b-1.0.3

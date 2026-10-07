@@ -14,6 +14,8 @@ RUN ollama serve & OLLAMA_PID=$! && \
     ollama pull gemma3:4b && \
     kill $OLLAMA_PID || true
 
+RUN pip install --no-cache-dir httpx uvicorn fastapi
+
 ENV OLLAMA_HOST=0.0.0.0:3000
 ENV OLLAMA_KEEP_ALIVE=-1
 ENV OLLAMA_WARMUP_MODEL=gemma3:4b
@@ -21,5 +23,5 @@ EXPOSE 3000
 
 
 # Build & push (this is the sole runtime image; app code is deployed via FaaS codebase):
-# docker build --no-cache -t gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gemma3-4b-1.0.0 -f Dockerfile .
-# docker push gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gemma3-4b-1.0.0
+# docker build --no-cache -t gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gemma3-4b-1.0.5 -f Dockerfile .
+# docker push gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gemma3-4b-1.0.5
