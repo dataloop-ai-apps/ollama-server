@@ -202,7 +202,7 @@ class Runner(dl.BaseServiceRunner):
                     if r.status_code == 200:
                         logger.info("Ollama ready on port %d (via %s) after %.1fs", OLLAMA_PORT, url, time.time() - start)
                         return
-                except httpx.ConnectError:
+                except (httpx.ConnectError, httpx.ReadTimeout, httpx.TimeoutException):
                     pass
             time.sleep(1)
         raise RuntimeError(f"Ollama failed to start within {timeout}s")
