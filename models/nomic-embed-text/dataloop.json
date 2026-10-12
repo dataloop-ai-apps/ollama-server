@@ -1,7 +1,7 @@
 {
     "name": "ollama-server-nomic-embed-text",
     "displayName": "Ollama Server - Nomic Embed Text",
-    "version": "1.0.15",
+    "version": "1.0.16",
     "scope": "public",
     "attributes": {
         "Category": [

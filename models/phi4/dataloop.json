@@ -1,7 +1,7 @@
 {
     "name": "ollama-server-phi4",
     "displayName": "Ollama Server - Phi4",
-    "version": "1.0.15",
+    "version": "1.0.16",
     "scope": "public",
     "attributes": {
         "Category": [
