@@ -1,0 +1,84 @@
+{
+    "name": "ollama-server-gemma3",
+    "displayName": "Ollama Server - Gemma3",
+    "version": "1.0.15",
+    "scope": "public",
+    "attributes": {
+        "Category": [
+          "Application"
+        ],
+        "Provider": "Ollama",
+        "Application Type": "Model",
+        "License": "MIT"
+      },
+    "description": "Local LLM inference via Ollama",
+    "components": {
+        "panels": [
+            {
+                "name": "ollama",
+                "supportedSlots": [
+                ],
+                "conditions": {}
+            }
+        ],
+        "modules": [
+            {
+                "name": "ollama-module",
+                "entryPoint": "runner.py",    
+                "className": "Runner",
+                "initInputs": [],
+                "config": {
+                    "isCustomServer": true
+                },
+                "functions": [
+                    {
+                        "name": "dummy",
+                        "output": [],
+                        "input": []
+                    }
+                ]
+            }
+        ],
+        "services": [
+            {
+                "name": "ollama-service-gemma3",
+                "displayName": "Ollama Server - Gemma3",
+                "moduleName": "ollama-module",
+                "panelNames": ["ollama"],
+                "initParams": {},
+                "runtime": {
+                    "podType": "highmem-l",
+                    "numReplicas": 1,
+                    "concurrency": 10,
+                    "runnerImage": "gcr.io/viewo-g/piper/agent/runner/apps/ollama-server:gemma3-4b-1.0.5",                    
+                    "singleAgent": false,
+                    "autoscaler": {
+                        "type": "rps",
+                        "maxReplicas": 1,
+                        "queueLength": 1
+                    },
+                    "preemptible": false
+                },
+                "drainTime": 600,
+                "onReset": "failed",
+                "runExecutionAsProcess": false,
+                "executionTimeout": 3600,
+                "maxAttempts": 3
+            }
+        ],
+        "metadata": [
+            {
+                "model": "gemma3",
+                "contextWindow": 262144,
+                "maxOutputTokens": 262144,
+                "capabilities": {
+                    "chat": true,
+                    "embeddings": false,
+                    "functionCalling": false,
+                    "vision": false,
+                    "streaming": false
+                }
+            }
+        ]
+    }
+}
