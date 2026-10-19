@@ -28,7 +28,7 @@ Integration tests are available to verify deployed Ollama services. For informat
 3. **Point clients at the app’s URL** in your environment (or your platform’s recommended way to reach installed apps).  
 4. **Choose a model** by name when you send a request (see the models table below).    
 
-To attach a **Dataloop model** to this app, set the model’s **app** to this installed application and set the **model name** to the Ollama model id (for example `phi4-mini`). Your model adapter can then use the app like any other managed inference endpoint in Dataloop.
+To attach a **Dataloop model** to this app, set the model’s **app** to this installed application and set the **model name** to the Ollama model id (for example `phi4-mini:latest`). Your model adapter can then use the app like any other managed inference endpoint in Dataloop.
 
 ## When it is ready
 
@@ -42,7 +42,7 @@ This repository includes separate DPK configurations for different models. Each 
 |-------------------|---------------------|-----------|----------------------|
 | `gemma3:4b`       | Chat                | CPU       | [models/gemma3/README.md](models/gemma3/README.md) |
 | `qwen3:4b`        | Chat (Reasoning)    | CPU       | [models/qwen3/README.md](models/qwen3/README.md) |
-| `phi4-mini`       | Chat                | CPU       | [models/phi4/README.md](models/phi4/README.md) |
+| `phi4-mini:latest`       | Chat                | CPU       | [models/phi4/README.md](models/phi4/README.md) |
 | `qwen3.5:9b`      | Chat (Reasoning)    | GPU       | [models/qwen35/README.md](models/qwen35/README.md) |
 | `chat-oss:20b`    | Chat                | GPU       | [models/gpt_oss/README.md](models/gpt_oss/README.md) |
 | `nomic-embed-text`| Embeddings          | CPU       | [models/nomic-embed-text/README.md](models/nomic-embed-text/README.md) |
@@ -93,7 +93,7 @@ curl -X POST http://jarvis:6789/api/v1/ai/providers \
     "type": "<provider-type-per-your-docs>",
     "models": [
       {
-        "id": "phi4-mini",
+        "id": "phi4-mini:latest",
         "display_name": "Phi-4 Mini (3.8B)",
         "capabilities": {
           "chat": true,
@@ -123,7 +123,7 @@ curl http://localhost:3000/v1/models
 curl http://localhost:3000/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
-    "model": "phi4-mini",
+    "model": "phi4-mini:latest",
     "messages": [{"role": "user", "content": "Hello!"}]
   }'
 ```

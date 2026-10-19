@@ -68,7 +68,7 @@
         ],
         "metadata": [
             {
-                "model": "qwen3",
+                "model": "qwen3:4b",
                 "contextWindow": 262144,
                 "maxOutputTokens": 262144,
                 "capabilities": {
