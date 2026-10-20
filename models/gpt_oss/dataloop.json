@@ -68,7 +68,7 @@
         ],
         "metadata": [
             {
-                "model": "chat-oss:20b",
+                "model": "gpt-oss:20b",
                 "contextWindow": 131072,
                 "maxOutputTokens": 131072,
                 "capabilities": {
