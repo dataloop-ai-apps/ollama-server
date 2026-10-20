@@ -68,7 +68,7 @@
         ],
         "metadata": [
             {
-                "model": "phi4",
+                "model": "phi4-mini:latest",
                 "contextWindow": 16000,
                 "maxOutputTokens": 16000,
                 "capabilities": {
@@ -76,7 +76,7 @@
                     "embeddings": false,
                     "functionCalling": false,
                     "vision": false,
-                    "streaming": false
+                    "streaming": true
                 }
             }
     ]

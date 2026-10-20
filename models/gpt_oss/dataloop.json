@@ -68,7 +68,7 @@
         ],
         "metadata": [
             {
-                "model": "gpt_oss_20b",
+                "model": "gpt-oss:20b",
                 "contextWindow": 131072,
                 "maxOutputTokens": 131072,
                 "capabilities": {

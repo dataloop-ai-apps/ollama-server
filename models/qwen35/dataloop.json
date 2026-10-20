@@ -68,7 +68,7 @@
         ],
         "metadata": [
             {
-                "model": "qwen35",
+                "model": "qwen3.5:9b",
                 "contextWindow": 262144,
                 "maxOutputTokens": 262144,
                 "capabilities": {
@@ -76,7 +76,7 @@
                     "embeddings": false,
                     "functionCalling": false,
                     "vision": false,
-                    "streaming": false
+                    "streaming": true
                 }
             }
         ]
